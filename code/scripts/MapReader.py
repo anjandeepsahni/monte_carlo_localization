@@ -8,6 +8,8 @@ class MapReader:
     def __init__(self, src_path_map):
 
         self._occupancy_map = np.genfromtxt(src_path_map, skip_header=7)
+        print(self._occupancy_map)
+        exit()
         self._occupancy_map[self._occupancy_map < 0] = -1
         self._occupancy_map[self._occupancy_map > 0] = 1 - self._occupancy_map[self._occupancy_map > 0]
         self._occupancy_map = np.flipud(self._occupancy_map)
