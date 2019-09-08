@@ -21,8 +21,12 @@ class MapReader:
     def visualize_map(self):
         fig = plt.figure()
         # plt.switch_backend('TkAgg')
-        mng = plt.get_current_fig_manager(); mng.resize(*mng.window.maxsize())
-        plt.ion(); plt.imshow(self._occupancy_map, cmap='Greys'); plt.axis([0, 800, 0, 800]); plt.draw()
+        # mng = plt.get_current_fig_manager()
+        # mng.resize(*mng.window.maxsize())
+        plt.ion()
+        plt.imshow(self._occupancy_map, cmap='Greys')
+        plt.axis([0, 800, 0, 800])
+        plt.draw()
         plt.pause(0)
 
     def get_map(self):
@@ -35,7 +39,7 @@ class MapReader:
         return self._size_y
 
 if __name__=="__main__":
-    
+
     src_path_map = '../data/map/wean.dat'
     map1 = MapReader(src_path_map)
     map1.visualize_map()
