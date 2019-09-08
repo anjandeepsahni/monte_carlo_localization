@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mapreader.hh"
+#include "mapReader.hh"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
