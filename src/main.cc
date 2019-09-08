@@ -4,7 +4,7 @@
 #include <vector>
 #include <random>
 
-#include "mapreader.hh"
+#include "mapReader.hh"
 using namespace std;
 
 
@@ -74,7 +74,7 @@ int main(int argc, const char * argv[])
     
     string src_path_map = "../data/map/wean.dat";
     string src_path_log = "../data/log/robotdata1.log";
-    mapreader();
+    // mapreader();
     // Get occupancy map (Anjandeep)
 
     // Instantiate Motion Model, Sensor Model and Resampler
