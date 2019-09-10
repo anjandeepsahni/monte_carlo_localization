@@ -22,4 +22,4 @@ public:
     int visulize_map();
 };
 
-#endif
+#endif  /* _MAPREADER_H */
