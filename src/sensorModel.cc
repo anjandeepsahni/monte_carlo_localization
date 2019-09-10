@@ -28,12 +28,13 @@ double SensorModel::beam_range_finder_model(vector<double> z_t1,
                                             vector<double> x_t1)
 {
     double q = 1;
-    for (int i=0; i<z_t1.size(); ++i)
+    for (int i = 0; i < z_t1.size(); ++i)
     {
         double z = z_t1[i];
         double p, p_h, p_s, p_m, p_r;
         // angle wrt x axis
-        float angle = (float)i * M_PI / 180 + x_t1[2] - M_PI_2;  // FIXME: Assumes entire 180 degree coverage.
+        // FIXME: Assumes entire 180 degree coverage.
+        float angle = (float)i * M_PI / 180 + x_t1[2] - M_PI_2;
         double z_true = ray_casting(x_t1, angle);
         p_h = p_hit(z, z_true);
         p_s = p_short(z, z_true);
@@ -120,7 +121,8 @@ double SensorModel::ray_casting(vector<double> x_t1, float angle)
     int step = 1;
     // Move along ray and find first obstacle
     int obs_dist = z_max_range;
-    for (int dist=0; dist<=z_max_range; dist=dist+step) // FIXME: should we start distance from 1?
+    // FIXME: should we start distance from 1?
+    for (int dist=0; dist<=z_max_range; dist=dist+step)
     {
         float x_end = x + dist * cos(angle - M_PI / 2) / 10.0;
         float y_end = y + dist * sin(angle - M_PI / 2) / 10.0;
