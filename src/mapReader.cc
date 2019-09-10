@@ -83,6 +83,7 @@ int MapReader::read_map()
             fscanf(fp, "%e", &temp);
             if(temp < 0.0)
             {
+                // prob < 0 means don't know
                 map.prob[x][y] = -1;
             }
             else
@@ -95,6 +96,7 @@ int MapReader::read_map()
                     map.min_y = y;
                 else if(y > map.max_y)
                     map.max_y = y;
+                // probability of (x,y) being occupied
                 map.prob[x][y] = temp;
             }
         }
