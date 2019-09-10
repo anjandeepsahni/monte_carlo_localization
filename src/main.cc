@@ -158,7 +158,6 @@ int main(int argc, const char * argv[])
                 // x_t1 = motion_model.update(u_t0, u_t1, x_t0)
 
                 // SENSOR MODEL (Dhananjai)
-                vector<double> x_t1_copy(x_t1.begin(), x_t1.end());
                 if (meas_type == 'L')
                 {
                     z_t = ranges;
@@ -166,21 +165,21 @@ int main(int argc, const char * argv[])
                     // TODO: Weights using the sensor model
                     // w_t = sensor_model.beam_range_finder_model(z_t, x_t1)
                     // w_t = 1 / num_particles
-                    x_t1_copy.push_back(w_t);
+                    x_t1.push_back(w_t);
                 }
 
                 else
                 {
-                    x_t1_copy.push_back(x_bar[m][3]);   // Use the old weight
+                    x_t1.push_back(x_bar[m][3]);   // Use the old weight
                 }
 
-                x_bar_new[m] = x_t1_copy;
+                x_bar_new[m] = x_t1;
             }
 
             x_bar = x_bar_new;
             u_t0 = u_t1;
 
-            // RESAMPLING
+            // RESAMPLING (Sanjana)
             // X_bar = resampler.low_variance_sampler(X_bar)
 
             if (vis_flag)
