@@ -7,7 +7,7 @@ typedef struct {
     int resolution, size_x, size_y;
     float offset_x, offset_y;
     int min_x, max_x, min_y, max_y;
-    float **prob;
+    float **prob;   // prob of (x,y) being occupied
 } map_type;
 
 
