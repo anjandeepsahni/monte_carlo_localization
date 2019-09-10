@@ -1,3 +1,6 @@
+#ifndef _SENSORMODEL_H
+#define _SENSORMODEL_H
+
 #include <iostream>
 using namespace std;
 
@@ -33,3 +36,5 @@ class SensorModel
         double p_max(double z);
         double p_rand();
 };
+
+#endif
