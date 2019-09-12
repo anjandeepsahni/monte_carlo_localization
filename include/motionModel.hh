@@ -2,6 +2,7 @@
 #include <cmath>
 #include <random>
 #include <vector>
+using namespace std;
 
 class MotionModel
 {

@@ -3,7 +3,10 @@
 #include "../include/motionModel.hh"
 #include <random>
 #include <vector>
+//#include <fstream>
+//#include <sstream>
 using namespace std;
+#include <bits/stdc++.h>
 
 
 
@@ -41,9 +44,9 @@ vector<double> MotionModel::update(vector<double> u_t0, vector<double> u_t1, vec
     //Gaussian noise distribution with zero mean and sd for each paramter modelling the noise of each parameter
     random_device rd{};
     mt19937 gen{rd()};
-    ddash_rot1= del_rot1 - d1(gen)
-    ddash_trans= del_trans - d2(gen)
-    ddash_rot2= del_trans - d3(gen)
+    ddash_rot1= del_rot1 - d1(gen);
+    ddash_trans= del_trans - d2(gen);
+    ddash_rot2= del_trans - d3(gen);
 
     // converting parameters from the robot's coordinate frame to the world coordinate frame, again by simple trignometric calculations. 
     vector<double> xt(3, 0.0);
@@ -186,8 +189,8 @@ int main(int argc, const char * argv[])
 
             path_u_t0x.push_back(u_t0[0]);
             path_u_t0y.push_back(u_t0[1]);
-            path_x_t0x.push_back(x_bar[0]);
-            path_x_t0y.push_back(x_bar[1]);
+            path_x_t0x.push_back(x_bar[0][0]);
+            path_x_t0y.push_back(x_bar[1][1]);
         }
 
         log_file.close();
