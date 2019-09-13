@@ -9,7 +9,7 @@
 using namespace std;
 using namespace cv;
 
-MapReader::MapReader(const char *mapName): mapName(mapName)
+MapReader::MapReader(string mapName): mapName(mapName)
 {
 }
 
@@ -22,7 +22,7 @@ int MapReader::read_map()
     FILE *fp;
     map = this->map;
 
-    if((fp = fopen(mapName, "rt")) == NULL)
+    if((fp = fopen(mapName.c_str(), "rt")) == NULL)
     {
         fprintf(stderr, "ERROR: Could not open file %s. %s\n", mapName, strerror(errno));
         return -1;

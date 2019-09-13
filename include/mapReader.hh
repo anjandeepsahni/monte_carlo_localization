@@ -19,9 +19,9 @@ class MapReader
 {
 public:
     map_type map;
-    const char *mapName;
+    string mapName;
 
-    MapReader(const char *mapName);
+    MapReader(string mapName);
     int read_map();
     int visulize_map();
 };
