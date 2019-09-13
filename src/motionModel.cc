@@ -58,6 +58,7 @@ vector<double> MotionModel::update(vector<double> u_t0, vector<double> u_t1, vec
     
 }
 
+#ifdef MOTION_MODEL_TEST
 vector<vector<double>> init_particles_random(int num_particles)
 {
     vector<vector<double>> x_bar_init(num_particles, vector<double>(4));
@@ -204,3 +205,4 @@ int main(int argc, const char * argv[])
 
     return 0;
 }
+#endif /* MOTION_MODEL_TEST */
