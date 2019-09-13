@@ -3,11 +3,7 @@
 #include "../include/motionModel.hh"
 #include <random>
 #include <vector>
-//#include <fstream>
-//#include <sstream>
 using namespace std;
-#include <bits/stdc++.h>
-
 
 
 //construcor initializing the tuning paramters, starting from small uniform values
