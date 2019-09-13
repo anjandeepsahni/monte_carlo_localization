@@ -1,0 +1,353 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		08D05FC423248E92007491F7 /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = 08D05FBC23248E92007491F7 /* main.cc */; };
+		08D05FC523248E92007491F7 /* mapReader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 08D05FBD23248E92007491F7 /* mapReader.cc */; };
+		08D05FDF23273EBE007491F7 /* sensorModel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 08D05FDE23273EBE007491F7 /* sensorModel.cc */; };
+		08D05FE323273FCE007491F7 /* resampler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 08D05FE123273FCE007491F7 /* resampler.cc */; };
+		08D05FE5232750CC007491F7 /* motionModel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 08D05FE4232750CC007491F7 /* motionModel.cc */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		08D05FAE23248DE4007491F7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		088C5C76232B238200865278 /* particleFilter.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = particleFilter.hh; sourceTree = "<group>"; };
+		08D05FB023248DE4007491F7 /* robot_localization */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = robot_localization; sourceTree = BUILT_PRODUCTS_DIR; };
+		08D05FBA23248E92007491F7 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		08D05FBC23248E92007491F7 /* main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cc; sourceTree = "<group>"; };
+		08D05FBD23248E92007491F7 /* mapReader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mapReader.cc; sourceTree = "<group>"; };
+		08D05FC023248E92007491F7 /* mapReader.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mapReader.hh; sourceTree = "<group>"; };
+		08D05FC223248E92007491F7 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		08D05FC323248E92007491F7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		08D05FD62324E326007491F7 /* wean.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wean.gif; sourceTree = "<group>"; };
+		08D05FD72324E326007491F7 /* wean.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wean.dat; sourceTree = "<group>"; };
+		08D05FD92324E326007491F7 /* robotdata3.log */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = robotdata3.log; sourceTree = "<group>"; };
+		08D05FDA2324E326007491F7 /* robotdata2.log */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = robotdata2.log; sourceTree = "<group>"; };
+		08D05FDB2324E326007491F7 /* robotdata1.log */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = robotdata1.log; sourceTree = "<group>"; };
+		08D05FDC2324E326007491F7 /* robotdata5.log */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = robotdata5.log; sourceTree = "<group>"; };
+		08D05FDD2324E326007491F7 /* robotdata4.log */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = robotdata4.log; sourceTree = "<group>"; };
+		08D05FDE23273EBE007491F7 /* sensorModel.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sensorModel.cc; sourceTree = "<group>"; };
+		08D05FE023273EC6007491F7 /* sensorModel.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sensorModel.hh; sourceTree = "<group>"; };
+		08D05FE123273FCE007491F7 /* resampler.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = resampler.cc; sourceTree = "<group>"; };
+		08D05FE223273FCE007491F7 /* resampler.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = resampler.hh; sourceTree = "<group>"; };
+		08D05FE4232750CC007491F7 /* motionModel.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = motionModel.cc; sourceTree = "<group>"; };
+		08D05FE6232750D4007491F7 /* motionModel.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = motionModel.hh; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		08D05FAD23248DE4007491F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08D05FA723248DE4007491F7 = {
+			isa = PBXGroup;
+			children = (
+				08D05FD42324E326007491F7 /* data */,
+				08D05FBF23248E92007491F7 /* include */,
+				08D05FBA23248E92007491F7 /* LICENSE */,
+				08D05FC223248E92007491F7 /* Makefile */,
+				08D05FC323248E92007491F7 /* README.md */,
+				08D05FBB23248E92007491F7 /* src */,
+				08D05FB123248DE4007491F7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		08D05FB123248DE4007491F7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				08D05FB023248DE4007491F7 /* robot_localization */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		08D05FBB23248E92007491F7 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				08D05FE4232750CC007491F7 /* motionModel.cc */,
+				08D05FDE23273EBE007491F7 /* sensorModel.cc */,
+				08D05FBC23248E92007491F7 /* main.cc */,
+				08D05FBD23248E92007491F7 /* mapReader.cc */,
+				08D05FE123273FCE007491F7 /* resampler.cc */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		08D05FBF23248E92007491F7 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				088C5C76232B238200865278 /* particleFilter.hh */,
+				08D05FE6232750D4007491F7 /* motionModel.hh */,
+				08D05FE223273FCE007491F7 /* resampler.hh */,
+				08D05FE023273EC6007491F7 /* sensorModel.hh */,
+				08D05FC023248E92007491F7 /* mapReader.hh */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		08D05FD42324E326007491F7 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				08D05FD52324E326007491F7 /* map */,
+				08D05FD82324E326007491F7 /* log */,
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
+		08D05FD52324E326007491F7 /* map */ = {
+			isa = PBXGroup;
+			children = (
+				08D05FD62324E326007491F7 /* wean.gif */,
+				08D05FD72324E326007491F7 /* wean.dat */,
+			);
+			path = map;
+			sourceTree = "<group>";
+		};
+		08D05FD82324E326007491F7 /* log */ = {
+			isa = PBXGroup;
+			children = (
+				08D05FD92324E326007491F7 /* robotdata3.log */,
+				08D05FDA2324E326007491F7 /* robotdata2.log */,
+				08D05FDB2324E326007491F7 /* robotdata1.log */,
+				08D05FDC2324E326007491F7 /* robotdata5.log */,
+				08D05FDD2324E326007491F7 /* robotdata4.log */,
+			);
+			path = log;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		08D05FAF23248DE4007491F7 /* robot_localization */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 08D05FB723248DE4007491F7 /* Build configuration list for PBXNativeTarget "robot_localization" */;
+			buildPhases = (
+				08D05FAC23248DE4007491F7 /* Sources */,
+				08D05FAD23248DE4007491F7 /* Frameworks */,
+				08D05FAE23248DE4007491F7 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = robot_localization;
+			productName = robot_localization;
+			productReference = 08D05FB023248DE4007491F7 /* robot_localization */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08D05FA823248DE4007491F7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1000;
+				ORGANIZATIONNAME = "Anjandeep Singh Sahni";
+				TargetAttributes = {
+					08D05FAF23248DE4007491F7 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+				};
+			};
+			buildConfigurationList = 08D05FAB23248DE4007491F7 /* Build configuration list for PBXProject "robot_localization" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 08D05FA723248DE4007491F7;
+			productRefGroup = 08D05FB123248DE4007491F7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				08D05FAF23248DE4007491F7 /* robot_localization */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		08D05FAC23248DE4007491F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				08D05FDF23273EBE007491F7 /* sensorModel.cc in Sources */,
+				08D05FE323273FCE007491F7 /* resampler.cc in Sources */,
+				08D05FE5232750CC007491F7 /* motionModel.cc in Sources */,
+				08D05FC423248E92007491F7 /* main.cc in Sources */,
+				08D05FC523248E92007491F7 /* mapReader.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		08D05FB523248DE4007491F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		08D05FB823248DE4007491F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CONFIGURATION_BUILD_DIR = bin/;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					"/usr/local/include/opencv4/**",
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_LDFLAGS = (
+					"-lopencv_gapi",
+					"-lopencv_stitching",
+					"-lopencv_aruco",
+					"-lopencv_bgsegm",
+					"-lopencv_bioinspired",
+					"-lopencv_ccalib",
+					"-lopencv_dnn_objdetect",
+					"-lopencv_dpm",
+					"-lopencv_face",
+					"-lopencv_freetype",
+					"-lopencv_fuzzy",
+					"-lopencv_hfs",
+					"-lopencv_img_hash",
+					"-lopencv_line_descriptor",
+					"-lopencv_quality",
+					"-lopencv_reg",
+					"-lopencv_rgbd",
+					"-lopencv_saliency",
+					"-lopencv_sfm",
+					"-lopencv_stereo",
+					"-lopencv_structured_light",
+					"-lopencv_phase_unwrapping",
+					"-lopencv_superres",
+					"-lopencv_optflow",
+					"-lopencv_surface_matching",
+					"-lopencv_tracking",
+					"-lopencv_datasets",
+					"-lopencv_text",
+					"-lopencv_highgui",
+					"-lopencv_dnn",
+					"-lopencv_plot",
+					"-lopencv_videostab",
+					"-lopencv_video",
+					"-lopencv_videoio",
+					"-lopencv_xfeatures2d",
+					"-lopencv_shape",
+					"-lopencv_ml",
+					"-lopencv_ximgproc",
+					"-lopencv_xobjdetect",
+					"-lopencv_objdetect",
+					"-lopencv_calib3d",
+					"-lopencv_imgcodecs",
+					"-lopencv_features2d",
+					"-lopencv_flann",
+					"-lopencv_xphoto",
+					"-lopencv_photo",
+					"-lopencv_imgproc",
+					"-lopencv_core",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYMROOT = build;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		08D05FAB23248DE4007491F7 /* Build configuration list for PBXProject "robot_localization" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				08D05FB523248DE4007491F7 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		08D05FB723248DE4007491F7 /* Build configuration list for PBXNativeTarget "robot_localization" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				08D05FB823248DE4007491F7 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08D05FA823248DE4007491F7 /* Project object */;
+}
