@@ -2,11 +2,13 @@
 #define _SENSORMODEL_H
 
 #include <iostream>
+#include <vector>
 #include "particleFilter.hh"
 #include "mapReader.hh"
 using namespace std;
 
 
+// FIXME: z_theta_step should be an integer
 typedef struct sensor_model_parms {
     double z_hit;           // coefficient for p_hit
     double z_short;         // coefficient for p_short
@@ -43,6 +45,8 @@ public:
     double p_max(double z);
     double p_rand(double z);
     double ray_casting(state_t x_t1, double angle);
+    vector<double> get_intrinsic_parameters(vector<vector<double>> Z,
+                                            vector<state_t> X);
 };
 
 #endif  /* _SENSORMODEL_H */
