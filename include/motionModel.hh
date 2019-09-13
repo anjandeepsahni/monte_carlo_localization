@@ -1,3 +1,6 @@
+#ifndef _MOTIONMODEL_H
+#define _MOTIONMODEL_H
+
 #include <iostream>
 #include <cmath>
 #include <random>
@@ -14,5 +17,7 @@ class MotionModel
 
         ~MotionModel();
 
-        vector<double> update(vector<double> , vector<double> , vector<double>);
+        state_t update(vector<double>, vector<double>, state_t);
 };
+
+#endif /* _MOTIONMODEL_H */

@@ -24,11 +24,11 @@ int MapReader::read_map()
 
     if((fp = fopen(mapName.c_str(), "rt")) == NULL)
     {
-        fprintf(stderr, "ERROR: Could not open file %s. %s\n", mapName, strerror(errno));
+        fprintf(stderr, "ERROR: Could not open file %s. %s\n", mapName.c_str(), strerror(errno));
         return -1;
     }
 
-    fprintf(stderr, "Reading map: %s\n", mapName);
+    fprintf(stderr, "Reading map: %s\n", mapName.c_str());
     while((fgets(line, 256, fp) != NULL)
           && (strncmp("global_map[0]", line , 13) != 0))
     {
@@ -42,24 +42,24 @@ int MapReader::read_map()
 
         if(strncmp(line, "robot_specifications->autoshifted_x", 35) == 0)
         {
-            if(sscanf(&line[35], "%g", &(map.offset_x)) != 0)
+            if(sscanf(&line[35], "%lf", &(map.offset_x)) != 0)
             {
-                printf("Map offsetX: %g cm\n", map.offset_x);
+                printf("Map offsetX: %lf cm\n", map.offset_x);
             }
         }
 
         if(strncmp(line, "robot_specifications->autoshifted_y", 35) == 0)
         {
-            if (sscanf(&line[35], "%g", &(map.offset_y)) != 0)
+            if (sscanf(&line[35], "%lf", &(map.offset_y)) != 0)
             {
-                printf("Map offsetY: %g cm\n", map.offset_y);
+                printf("Map offsetY: %lf cm\n", map.offset_y);
             }
         }
     }
 
     if(sscanf(line,"global_map[0]: %d %d", &map.size_y, &map.size_x) != 2)
     {
-        fprintf(stderr, "ERROR: Corrupted file %s\n", mapName);
+        fprintf(stderr, "ERROR: Corrupted file %s\n", mapName.c_str());
         fclose(fp);
         return -1;
     }

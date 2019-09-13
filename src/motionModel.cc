@@ -22,7 +22,7 @@ MotionModel::~MotionModel()
 {
 }
  
-vector<double> MotionModel::update(vector<double> u_t0, vector<double> u_t1, vector<double> x_t0)
+state_t MotionModel::update(vector<double> u_t0, vector<double> u_t1, state_t x_t0)
 {
     double del_rot1, del_trans, del_rot2, ddash_rot1, ddash_trans, ddash_rot2, term1, term2, term3;
 
@@ -49,16 +49,17 @@ vector<double> MotionModel::update(vector<double> u_t0, vector<double> u_t1, vec
 
     // converting parameters from the robot's coordinate frame to the world coordinate frame, again by simple trignometric calculations. 
     state_t st;
-    st.x= x_t0[0] + ddash_trans* cos(x_t0[2] + ddash_rot1);
-    st.y= x_t0[1] + ddash_trans* sin(x_t0[2]+ ddash_rot1);
-    st.theta= x_t0[2] + ddash_rot1 + ddash_rot2;
-    st.weight= 0.0
+    st.x = x_t0.x + ddash_trans* cos(x_t0.y + ddash_rot1);
+    st.y = x_t0.y + ddash_trans* sin(x_t0.y + ddash_rot1);
+    st.theta = x_t0.theta + ddash_rot1 + ddash_rot2;
+    st.weight = 0.0;
     
     return st;
     
 }
 
 #ifdef MOTION_MODEL_TEST
+
 vector<vector<double>> init_particles_random(int num_particles)
 {
     vector<vector<double>> x_bar_init(num_particles, vector<double>(4));

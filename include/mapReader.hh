@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 typedef struct {
     int resolution, size_x, size_y;
     double offset_x, offset_y;

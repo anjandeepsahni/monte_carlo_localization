@@ -78,12 +78,25 @@ int main(int argc, const char * argv[])
     string src_path_log = "../data/log/robotdata1.log";
 
     // Get occupancy map (Anjandeep)
-    MapReader map_obj = MapReader((const char *)src_path_map);
+    MapReader map_obj = MapReader(src_path_map);
     map_type occupancy_map = map_obj.map;
 
     // Instantiate Motion Model, Sensor Model and Resampler
     MotionModel motion_model = MotionModel(0.1, 0.1, 0.1, 0.1);
-    SensorModel sensor_model = SensorModel();
+    sm_t sm_init = {
+        0.1,    // z_hit
+        0.1,    // z_short
+        0.1,    // z_max
+        0.1,    // z_rand
+        8191.0, // z_max_range
+        1.0,    // z_theta_step
+        0.1,    // inv_var_hit
+        0.1,    // lambda_short
+        1.0,    // laser_offset
+        0.7,    // threshold
+        occupancy_map // occupancy_map
+    };
+    SensorModel sensor_model = SensorModel(sm_init);
     Resampler resampler = Resampler();
 
     bool vis_flag = true;

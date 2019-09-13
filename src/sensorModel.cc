@@ -12,10 +12,9 @@ SensorModel::SensorModel(sm_t sm_p)
     sm_params.z_max = sm_p.z_max;
     sm_params.z_rand = sm_p.z_rand;
     sm_params.z_max_range = sm_p.z_max_range;
-    sm_params.z_theta_range = sm_p.z_theta_range;
+    sm_params.z_theta_step = sm_p.z_theta_step;
     sm_params.inv_var_hit = sm_p.inv_var_hit;
     sm_params.lambda_short = sm_p.lambda_short;
-    sm_params.k = sm_p.k;
     sm_params.laser_offset = sm_p.laser_offset;
     sm_params.threshold = sm_p.threshold;
     sm_params.occupancy_map = sm_p.occupancy_map;
@@ -26,12 +25,11 @@ double SensorModel::beam_range_finder_model(const vector<double> z_t1,
                                             const state_t x_t1)
 {
     double q = 1;
-    for (int i = 0; i < z_t1.size(); ++i)
+    for (int i = 0; i < z_t1.size(); i+=sm_params.z_theta_step)
     {
         double z = z_t1[i];
         double p, p_h, p_s, p_m, p_r;
-        // angle wrt x axis
-        // FIXME: Assumes entire 180 degree coverage.
+        // Angle wrt x axis
         double angle = (double)i * M_PI / 180 + x_t1.theta - M_PI_2;
         double z_true = ray_casting(x_t1, angle);
         p_h = p_hit(z, z_true);
@@ -55,7 +53,8 @@ double SensorModel::p_hit(double z, double z_true)
     {
         double i_v_h = sm_params.inv_var_hit;
         double temp = z - z_true, foo = sqrt(i_v_h) / sqrt(2);
-        p = sm_params.k * exp(-0.5 * temp * temp * i_v_h);
+        double k = sqrt(i_v_h / (2 * M_PI));
+        p = k * exp(-0.5 * temp * temp * i_v_h);
         // Normalization
         double cdf_0 = 0.5 * erfc(- (0 - z_true) * foo);
         double cdf_z_max = 0.5 * erfc(- (sm_params.z_max_range - z_true) * foo);
@@ -113,20 +112,20 @@ double SensorModel::p_rand(double z)
 
 double SensorModel::ray_casting(state_t x_t1, double angle)
 {
-    // Adjust for laser offset. Adjust by 10cm for map resolution.
-    // FIXME: Remove hard-coding.
-    double x = x_t1.x + (sm_params.laser_offset/10.0) * cos(x_t1.theta);
-    double y = x_t1.y + (sm_params.laser_offset/10.0) * sin(x_t1.theta);
+    // Adjust for laser offset. Adjust by for map resolution.
+    double map_res = sm_params.occupancy_map.resolution;
+    double x = x_t1.x + (sm_params.laser_offset/map_res) * cos(x_t1.theta);
+    double y = x_t1.y + (sm_params.laser_offset/map_res) * sin(x_t1.theta);
     // Step size along the ray
     int step = 1;
     // Move along ray and find first obstacle
     int obs_dist = sm_params.z_max_range;
-    // FIXME: should we start distance from 1?
+    // Start ray tracing from dist=0, in case particle is at occupied location
     for (int dist=0; dist <= sm_params.z_max_range; dist=dist+step)
     {
         double x_end = x + dist * cos(angle - M_PI / 2) / 10.0;
         double y_end = y + dist * sin(angle - M_PI / 2) / 10.0;
-        if (sm_params.occupancy_map[(int)x_end][(int)y_end] >= sm_params.threshold)
+        if (sm_params.occupancy_map.prob[(int)x_end][(int)y_end] >= sm_params.threshold)
         {
             obs_dist = dist;
             break;
