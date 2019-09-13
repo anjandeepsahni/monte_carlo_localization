@@ -95,7 +95,7 @@ int main(int argc, const char * argv[])
         0.1,    // inv_var_hit
         0.1,    // lambda_short
         1.0,    // laser_offset
-        0.7,    // threshold
+        0.8,    // threshold
         occupancy_map // occupancy_map
     };
     SensorModel sensor_model = SensorModel(sm_init);

@@ -114,8 +114,8 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
 {
     // Adjust for laser offset. Adjust by for map resolution.
     double map_res = sm_params.occupancy_map.resolution;
-    double x = x_t1.x + (sm_params.laser_offset/map_res) * cos(x_t1.theta);
-    double y = x_t1.y + (sm_params.laser_offset/map_res) * sin(x_t1.theta);
+    double x = x_t1.x + sm_params.laser_offset * cos(x_t1.theta);
+    double y = x_t1.y + sm_params.laser_offset * sin(x_t1.theta);
     // Step size along the ray
     int step = 1;
     // Move along ray and find first obstacle
@@ -123,9 +123,17 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
     // Start ray tracing from dist=0, in case particle is at occupied location
     for (int dist=0; dist <= sm_params.z_max_range; dist=dist+step)
     {
-        double x_end = x + dist * cos(angle - M_PI / 2) / map_res;
-        double y_end = y + dist * sin(angle - M_PI / 2) / map_res;
-        if (sm_params.occupancy_map.prob[(int)x_end][(int)y_end] >= sm_params.threshold)
+        double x_end = (x + dist * cos(angle - M_PI / 2)) / map_res;
+        double y_end = (y + dist * sin(angle - M_PI / 2)) / map_res;
+        if (x_end > sm_params.occupancy_map.max_x or
+            x_end < sm_params.occupancy_map.min_x or
+            y_end > sm_params.occupancy_map.max_y or
+            y_end < sm_params.occupancy_map.min_y)
+        {
+            obs_dist = dist;
+            break;
+        }
+        else if (sm_params.occupancy_map.prob[(int)x_end][(int)y_end] <= sm_params.threshold)
         {
             obs_dist = dist;
             break;
