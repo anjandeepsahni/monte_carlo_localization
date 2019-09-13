@@ -77,8 +77,10 @@ int main(int argc, const char * argv[])
     string src_path_map = "../data/map/wean.dat";
     string src_path_log = "../data/log/robotdata1.log";
 
-    // Get occupancy map (Anjandeep)
+    // Get occupancy map
     MapReader map_obj = MapReader(src_path_map);
+    if (map_obj.read_map() < 0)
+        exit(-1);
     map_type occupancy_map = map_obj.map;
 
     // Instantiate Motion Model, Sensor Model and Resampler

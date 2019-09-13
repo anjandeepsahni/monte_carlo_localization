@@ -123,8 +123,8 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
     // Start ray tracing from dist=0, in case particle is at occupied location
     for (int dist=0; dist <= sm_params.z_max_range; dist=dist+step)
     {
-        double x_end = x + dist * cos(angle - M_PI / 2) / 10.0;
-        double y_end = y + dist * sin(angle - M_PI / 2) / 10.0;
+        double x_end = x + dist * cos(angle - M_PI / 2) / map_res;
+        double y_end = y + dist * sin(angle - M_PI / 2) / map_res;
         if (sm_params.occupancy_map.prob[(int)x_end][(int)y_end] >= sm_params.threshold)
         {
             obs_dist = dist;
