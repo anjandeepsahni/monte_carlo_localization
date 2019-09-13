@@ -49,12 +49,13 @@ vector<double> MotionModel::update(vector<double> u_t0, vector<double> u_t1, vec
     ddash_rot2= del_trans - d3(gen);
 
     // converting parameters from the robot's coordinate frame to the world coordinate frame, again by simple trignometric calculations. 
-    vector<double> xt(3, 0.0);
-    xt[0]= x_t0[0] + ddash_trans* cos(x_t0[2] + ddash_rot1);
-    xt[1]= x_t0[1] + ddash_trans* sin(x_t0[2]+ ddash_rot1);
-    xt[2]= x_t0[2] + ddash_rot1 + ddash_rot2;
+    state_t st;
+    st.x= x_t0[0] + ddash_trans* cos(x_t0[2] + ddash_rot1);
+    st.y= x_t0[1] + ddash_trans* sin(x_t0[2]+ ddash_rot1);
+    st.theta= x_t0[2] + ddash_rot1 + ddash_rot2;
+    st.weight= 0.0
     
-    return xt;
+    return st;
     
 }
 
