@@ -2,11 +2,12 @@
 #include <random>
 #include <stdlib.h>
 #include "resampler.hh"
+#include "particleFilter.hh"
 
 using namespace std;
 
 
-vector<vector<double>> Resampler::multinomial_sampler(vector<vector<double>> x_bar)
+vector<state_t> Resampler::multinomial_sampler(vector<state_t> x_bar)
 {
     // number of particles
     long M = x_bar.size();
@@ -14,14 +15,14 @@ vector<vector<double>> Resampler::multinomial_sampler(vector<vector<double>> x_b
     // Extract the particle weights.
     vector<double> weights;
     for(int i=0; i<M; ++i) {
-        weights.push_back(x_bar[i][3]);
+        weights.push_back(x_bar[i].weight);
     }
 
     // Create the distribution with those weights.
     discrete_distribution<> d(weights.begin(), weights.end());
 
     // Use the distribution to resample particles.
-    vector<vector<double>> x_bar_resampled(M, vector<double>(4));
+    vector<state_t> x_bar_resampled(M);
     default_random_engine generator;
     for(int i=0; i<M; ++i) {
         x_bar_resampled[i] = x_bar[d(generator)];
@@ -31,16 +32,16 @@ vector<vector<double>> Resampler::multinomial_sampler(vector<vector<double>> x_b
 }
 
 
-vector<vector<double>> Resampler::low_variance_sampler(vector<vector<double>> x_bar)
+vector<state_t> Resampler::low_variance_sampler(vector<state_t> x_bar)
 {
     // number of particles
     long M = x_bar.size();
 
     // sampler parameters
     float r = (float) (rand()) / ((float) (RAND_MAX * M));
-    float c = x_bar[0][3];
+    float c = x_bar[0].weight;
     int i = 0;
-    vector<vector<double>> x_bar_resampled(M, vector<double>(4));
+    vector<state_t> x_bar_resampled(M);
 
     for (int m=1; m<=M; ++m)
     {
@@ -48,7 +49,7 @@ vector<vector<double>> Resampler::low_variance_sampler(vector<vector<double>> x_
         while (u > c)
         {
             ++i;
-            c += x_bar[i][3];
+            c += x_bar[i].weight;
         }
         x_bar_resampled[m-1] = x_bar[i];
     }

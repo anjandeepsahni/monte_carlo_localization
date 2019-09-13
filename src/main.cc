@@ -24,7 +24,7 @@ void visualize_timestep()
 }
 
 
-vector<vector<double>> init_particles_random(int num_particles)
+vector<state_t> init_particles_random(int num_particles)
 {
     vector<state_t> x_bar_init(num_particles);
     default_random_engine generator;
@@ -46,7 +46,7 @@ vector<vector<double>> init_particles_random(int num_particles)
 
 
 // TODO: Implement this function
-vector<vector<double>> init_particles_freespace(int num_particles)
+vector<state_t> init_particles_freespace(int num_particles)
 {
     vector<state_t> x_bar_init(num_particles);
     return x_bar_init;
@@ -88,7 +88,7 @@ int main(int argc, const char * argv[])
 
     bool vis_flag = true;
     int num_particles = 500;
-    vector<vector<double>> x_bar;
+    vector<state_t> x_bar;
     x_bar = init_particles_random(num_particles);
 
     /*
