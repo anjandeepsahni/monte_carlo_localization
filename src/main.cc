@@ -2,11 +2,13 @@
 #include <fstream>
 #include <sstream>
 #include <random>
-
 #include "mapReader.hh"
 #include "sensorModel.hh"
-using namespace std;
+#include "motionModel.hh"
+#include "resampler.hh"
+#include "particleFilter.hh"
 
+using namespace std;
 
 // TODO: Implement this function
 void visualize_map()
@@ -24,7 +26,7 @@ void visualize_timestep()
 
 vector<vector<double>> init_particles_random(int num_particles)
 {
-    vector<vector<double>> x_bar_init(num_particles, vector<double>(4));
+    vector<state_t> x_bar_init(num_particles);
     default_random_engine generator;
     uniform_real_distribution<double> dist_x(3000, 7000);
     uniform_real_distribution<double> dist_y(0, 7000);
@@ -35,7 +37,7 @@ vector<vector<double>> init_particles_random(int num_particles)
         double y = dist_y(generator);
         double theta = dist_theta(generator);
         double w = 1 / num_particles;
-        vector<double> meas = {x, y, theta, w};
+        state_t meas = {x, y, theta, w};
         x_bar_init[m] = meas;
     }
 
@@ -46,7 +48,7 @@ vector<vector<double>> init_particles_random(int num_particles)
 // TODO: Implement this function
 vector<vector<double>> init_particles_freespace(int num_particles)
 {
-    vector<vector<double>> x_bar_init(num_particles, vector<double>(4));
+    vector<state_t> x_bar_init(num_particles);
     return x_bar_init;
 }
 
@@ -74,10 +76,15 @@ int main(int argc, const char * argv[])
     
     string src_path_map = "../data/map/wean.dat";
     string src_path_log = "../data/log/robotdata1.log";
-    // mapreader();
+
     // Get occupancy map (Anjandeep)
+    MapReader map_obj = MapReader((const char *)src_path_map);
+    map_type occupancy_map = map_obj.map;
 
     // Instantiate Motion Model, Sensor Model and Resampler
+    MotionModel motion_model = MotionModel(0.1, 0.1, 0.1, 0.1);
+    SensorModel sensor_model = SensorModel();
+    Resampler resampler = Resampler();
 
     bool vis_flag = true;
     int num_particles = 500;
@@ -98,9 +105,9 @@ int main(int argc, const char * argv[])
     {
         vector<double> u_t0;
         vector<double> u_t1;
-        vector<double> x_t0;
-        vector<double> x_t1;
         vector<double> z_t;
+        state_t x_t0;
+        state_t x_t1;
         string line;
         int time_idx = 0;
         while (getline(log_file, line))
@@ -126,8 +133,9 @@ int main(int argc, const char * argv[])
                 odometry_robot.push_back(meas_vals[i]);
             double time_stamp = meas_vals[meas_vals.size() - 1];
 
-            // if ((time_stamp <= 0.0) | (meas_type == "O")): # ignore pure
-            // odometry measurements for now (faster debugging) continue
+            // Ignoring odometry reading
+            if ((time_stamp <= 0.0) || (meas_type == 'O'))
+                continue;
 
             if (meas_type == 'L')
             {
@@ -147,30 +155,28 @@ int main(int argc, const char * argv[])
                 continue;
             }
 
-            vector<vector<double>> x_bar_new(num_particles, vector<double>(4));
+            vector<state_t> x_bar_new(num_particles);
             u_t1 = odometry_robot;
             // For all particles
             for (int m = 0; m < num_particles; m++)
             {
-                // MOTION MODEL (Sanjana)
-                x_t0 = vector<double>(x_bar[m].begin(), x_bar[m].begin() + 3);
-                // TODO: Update x_t1 by calling the motion model update function
-                // x_t1 = motion_model.update(u_t0, u_t1, x_t0)
+                // Motion model
+                x_t0 = x_bar[m];
+                x_t1 = motion_model.update(u_t0, u_t1, x_t0);
+                x_bar_new[m] = x_t1;
 
-                // SENSOR MODEL (Dhananjai)
+                // Sensor model
                 if (meas_type == 'L')
                 {
-                    z_t = ranges;
                     double w_t;
-                    // TODO: Weights using the sensor model
-                    // w_t = sensor_model.beam_range_finder_model(z_t, x_t1)
-                    // w_t = 1 / num_particles
-                    x_t1.push_back(w_t);
+                    z_t = ranges;
+                    w_t = sensor_model.beam_range_finder_model(z_t, x_t1);
+                    w_t = 1 / num_particles;
+                    x_t1.weight = w_t;
                 }
-
                 else
                 {
-                    x_t1.push_back(x_bar[m][3]);   // Use the old weight
+                    x_t1.weight = x_bar[m].weight;   // Use the old weight
                 }
 
                 x_bar_new[m] = x_t1;
@@ -179,8 +185,8 @@ int main(int argc, const char * argv[])
             x_bar = x_bar_new;
             u_t0 = u_t1;
 
-            // RESAMPLING (Sanjana)
-            // X_bar = resampler.low_variance_sampler(X_bar)
+            // Resampling
+            x_bar = resampler.low_variance_sampler(x_bar);
 
             if (vis_flag)
             {
