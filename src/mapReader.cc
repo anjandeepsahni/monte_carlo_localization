@@ -3,11 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mapReader.hh"
+
+#ifdef MAP_VISUALIZE
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#endif /* MAP_VISUALIZE */
 
 using namespace std;
+
+#ifdef MAP_VISUALIZE
 using namespace cv;
+#endif /* MAP_VISUALIZE */
 
 MapReader::MapReader(string mapName): mapName(mapName)
 {
@@ -106,6 +112,7 @@ int MapReader::read_map()
     return 0;
 }
 
+#ifdef MAP_VISUALIZE
 int MapReader::visulize_map()
 {
     map = this->map;
@@ -123,3 +130,4 @@ int MapReader::visulize_map()
     waitKey(0);
     return 0;
 }
+#endif /* MAP_VISUALIZE */
