@@ -67,10 +67,6 @@ int MapReader::read_map()
     printf("Map size: %dx%d\n", map.size_x, map.size_y);
 
     // allocate memory for map prob
-    map.prob = (float **)calloc(map.size_x, sizeof(float *));
-    for(int i = 0; i < map.size_x; i++)
-        map.prob[i] = (float *)calloc(map.size_y, sizeof(float));
-
     map.min_x = map.size_x;
     map.max_x = 0;
     map.min_y = map.size_y;
@@ -78,13 +74,14 @@ int MapReader::read_map()
     count = 0;
     for(x = 0; x < map.size_x; x++)
     {
+        vector<double> prob;
         for(y = 0; y < map.size_y; y++, count++)
         {
             fscanf(fp, "%e", &temp);
             if(temp < 0.0)
             {
                 // prob < 0 means don't know
-                map.prob[x][y] = -1;
+                prob.push_back(-1);
             }
             else
             {
@@ -97,9 +94,10 @@ int MapReader::read_map()
                 else if(y > map.max_y)
                     map.max_y = y;
                 // probability of (x,y) being occupied
-                map.prob[x][y] = temp;
+                prob.push_back(temp);
             }
         }
+        map.prob.push_back(prob);
     }
     printf("Map min_X: %d, max_X %d\n", map.min_x, map.max_x);
     printf("Map min_Y: %d, max_Y %d\n", map.min_y, map.max_y);
