@@ -5,6 +5,7 @@
 
 #include "mapReader.hh"
 #include "sensorModel.hh"
+#include "particleFilter.hh"
 using namespace std;
 
 
@@ -22,9 +23,9 @@ void visualize_timestep()
 }
 
 
-vector<vector<double>> init_particles_random(int num_particles)
+vector<state_t> init_particles_random(int num_particles)
 {
-    vector<vector<double>> x_bar_init(num_particles, vector<double>(4));
+    vector<state_t> x_bar_init(num_particles);
     default_random_engine generator;
     uniform_real_distribution<double> dist_x(3000, 7000);
     uniform_real_distribution<double> dist_y(0, 7000);
@@ -35,8 +36,8 @@ vector<vector<double>> init_particles_random(int num_particles)
         double y = dist_y(generator);
         double theta = dist_theta(generator);
         double w = 1 / num_particles;
-        vector<double> meas = {x, y, theta, w};
-        x_bar_init[m] = meas;
+        state_t s = {x, y, theta, w};
+        x_bar_init[m] = s;
     }
 
     return x_bar_init;
@@ -164,7 +165,7 @@ int main(int argc, const char * argv[])
                     double w_t;
                     // TODO: Weights using the sensor model
                     // w_t = sensor_model.beam_range_finder_model(z_t, x_t1)
-                    // w_t = 1 / num_particles
+                    w_t = 1 / num_particles
                     x_t1.push_back(w_t);
                 }
 
