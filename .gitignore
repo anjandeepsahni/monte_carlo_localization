@@ -5,6 +5,9 @@ lib/*
 # Ignore any executables
 bin/*
 
+# Ignore result directory
+result/*
+
 # Ignore Mac specific files
 .DS_Store
 

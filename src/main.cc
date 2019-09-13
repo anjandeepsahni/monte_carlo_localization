@@ -10,19 +10,6 @@
 
 using namespace std;
 
-// TODO: Implement this function
-void visualize_map()
-{
-
-}
-
-
-// TODO: Implement this function
-void visualize_timestep()
-{
-
-}
-
 
 vector<state_t> init_particles_random(int num_particles)
 {
@@ -112,7 +99,7 @@ int main(int argc, const char * argv[])
 
     if (vis_flag)
     {
-        // Call visualize_map
+        // map_obj.visulize_map();
     }
 
     ifstream log_file (src_path_log);   // Read the log file
@@ -205,7 +192,7 @@ int main(int argc, const char * argv[])
 
             if (vis_flag)
             {
-                // Call visualize_timestep
+                map_obj.visulize_map(x_bar, true);
             }
         }
 
@@ -218,5 +205,6 @@ int main(int argc, const char * argv[])
         cout << endl;
     }
 
+    map_obj.save_video("../result/robotmovie.avi");
     return 0;
 }

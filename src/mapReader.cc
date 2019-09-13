@@ -2,11 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cstring>
 #include "mapReader.hh"
+#include "particleFilter.hh"
 
 #ifdef MAP_VISUALIZE
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #endif /* MAP_VISUALIZE */
 
 using namespace std;
@@ -26,7 +29,6 @@ int MapReader::read_map()
     float temp;
     char line[256];
     FILE *fp;
-    map = this->map;
 
     if((fp = fopen(mapName.c_str(), "rt")) == NULL)
     {
@@ -113,9 +115,11 @@ int MapReader::read_map()
 }
 
 #ifdef MAP_VISUALIZE
-int MapReader::visulize_map()
+
+int MapReader::visulize_map(vector<state_t> x_bar, bool storeForVideo)
 {
-    map = this->map;
+    int res = map.resolution;
+
     Mat image = Mat::zeros(map.size_x, map.size_y, CV_32FC1);
 
     for (unsigned int i = 0; i < image.rows; i++)
@@ -123,11 +127,50 @@ int MapReader::visulize_map()
         for (unsigned int j = 0; j < image.cols; j++)
         {
             if (map.prob[i][j] > 0.0)
-                image.at<float>(i, j) = map.prob[i][j];
+                image.at<float>(j, i) = map.prob[i][j];
         }
     }
-    imshow("Image", image);
-    waitKey(0);
+
+    Mat image_color = Mat::zeros(map.size_x, map.size_y, CV_32FC3);
+    cvtColor(image, image_color, COLOR_GRAY2BGR);
+    
+    if (!x_bar.empty())
+    {
+        for (int i=0; i < x_bar.size(); ++i)
+        {
+            circle(image_color, Point_<int>((int)(x_bar[i].y/res), (int)(x_bar[i].x/res)), 1, Scalar(0, 0, 255), 2, 8);
+        }
+    }
+
+    if (storeForVideo)
+    {
+        image_color.convertTo(image_color, CV_8UC3, 255.0);
+        videoFrames.push_back(image_color);
+    }
+    else
+    {
+        imshow("Image", image_color);
+        waitKey(0);
+    }
     return 0;
 }
+
+
+int MapReader::save_video(string videoPath)
+{
+    if (videoFrames.empty())
+        return -1;
+
+    int width = (videoFrames[0].size()).width;
+    int height = (videoFrames[0].size()).height;
+    VideoWriter video = VideoWriter(videoPath, 0, 1, Size2i(width, height));
+
+    for (int i = 0; i < videoFrames.size(); ++i)
+        video.write(videoFrames[i]);
+
+    video.release();
+    return 0;
+}
+
 #endif /* MAP_VISUALIZE */
+
