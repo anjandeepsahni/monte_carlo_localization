@@ -1,8 +1,11 @@
 #include <iostream>
 #include <cmath>
-#include "../include/motionModel.hh"
 #include <random>
 #include <vector>
+
+#include "particleFilter.hh"
+#include "../include/motionModel.hh"
+
 using namespace std;
 
 
