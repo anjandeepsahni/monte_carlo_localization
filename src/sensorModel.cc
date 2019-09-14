@@ -8,6 +8,9 @@ using namespace std;
 
 SensorModel::SensorModel(sm_t sm_p)
 {
+    double sum_weights = sm_p.z_hit + sm_p.z_short + sm_p.z_max + sm_p.z_rand;
+    if (abs(1 - sum_weights) >= 0.00001)
+        throw runtime_error("Weights of sensor model errors must sum to 1, but got " + to_string(sum_weights));
     sm_params.z_hit = sm_p.z_hit;
     sm_params.z_short = sm_p.z_short;
     sm_params.z_max = sm_p.z_max;
@@ -15,7 +18,7 @@ SensorModel::SensorModel(sm_t sm_p)
     sm_params.z_max_range = sm_p.z_max_range;
     sm_params.z_theta_step = sm_p.z_theta_step;
     sm_params.z_dist_step = sm_p.z_dist_step;
-    sm_params.inv_var_hit = sm_p.inv_var_hit;
+    sm_params.p_hit_std = sm_p.p_hit_std;
     sm_params.lambda_short = sm_p.lambda_short;
     sm_params.laser_offset = sm_p.laser_offset;
     sm_params.threshold = sm_p.threshold;
@@ -26,7 +29,7 @@ SensorModel::SensorModel(sm_t sm_p)
 double SensorModel::beam_range_finder_model(const vector<double> z_t1,
                                             const state_t x_t1)
 {
-    double q = 1;
+    double q = 0;
     // Traversing through measurement angles
     for (int i = 0; i < z_t1.size(); i += sm_params.z_theta_step)
     {
@@ -42,10 +45,10 @@ double SensorModel::beam_range_finder_model(const vector<double> z_t1,
 
         p = sm_params.z_hit * p_h + sm_params.z_short * p_s
             + sm_params.z_max * p_m + sm_params.z_rand * p_r;
-        q *= p;
+        q += log(p);
     }
 
-    return q;
+    return -q;  // Negative log likelihood
 }
 
 
@@ -54,13 +57,13 @@ double SensorModel::p_hit(double z, double z_true)
     double p;
     if (z >= 0 && z <= sm_params.z_max_range)
     {
-        double i_v_h = sm_params.inv_var_hit;
-        double temp = z - z_true, foo = sqrt(i_v_h) / sqrt(2);
-        double k = sqrt(i_v_h / (2 * M_PI));
-        p = k * exp(-0.5 * temp * temp * i_v_h);
+        double var = pow(sm_params.p_hit_std,2);
+        double k = sqrt(1 / (2 * M_PI * var));
+        p = k * exp(-(((0.5 * pow(z - z_true, 2)) / var)));
+
         // Normalization
-        double cdf_0 = 0.5 * erfc(- (0 - z_true) * foo);
-        double cdf_z_max = 0.5 * erfc(- (sm_params.z_max_range - z_true) * foo);
+        double cdf_0 = 0.5 * erfc(- (0 - z_true) / sqrt(2*var));
+        double cdf_z_max = 0.5 * erfc(- (sm_params.z_max_range - z_true) * sqrt(2*var));
         double normalizer = cdf_z_max - cdf_0;
         p /= normalizer;
     }
@@ -81,6 +84,7 @@ double SensorModel::p_short(double z, double z_true)
     {
         double l_s = sm_params.lambda_short;
         p = l_s * exp(-l_s * z);
+
         // Normalization
         double normalizer = 1 - exp(-l_s * z_true);
         p /= normalizer;
@@ -156,7 +160,7 @@ vector<double> SensorModel::get_intrinsic_parameters(vector<vector<double>> Z,
         throw runtime_error("Number of measurements and poses must be equal");
 
     double z_h = 0, z_s = 0, z_m = 0, z_r = 0;
-    double std_h = 1 / sqrt(sm_params.inv_var_hit); // Initialize properly
+    double std_h = sm_params.p_hit_std; // Initialize properly
     double lambda_s = sm_params.lambda_short;
     double num_std_h = 0;       // Running sum of numerator of std formula
     double num_lambda_s = 0;    // Running sum of denominator of lambda formula
@@ -191,7 +195,7 @@ vector<double> SensorModel::get_intrinsic_parameters(vector<vector<double>> Z,
             {
                 double z = Z[i][j]; // Measurement at a certain angle
                 z_magnitude += z * z;
-                double p_h, p_s, p_m, p_r;
+                double p_h=1, p_s=1, p_m=1, p_r=1;
                 // Angle wrt x axis
                 double angle = (double)i * M_PI / 180 + X[i].theta - M_PI_2;
                 double z_true = ray_casting(X[i], angle);
@@ -234,7 +238,7 @@ vector<double> SensorModel::get_intrinsic_parameters(vector<vector<double>> Z,
         std_h = sqrt(num_std_h / e_h);
         lambda_s = e_s / num_lambda_s;
         // Update sensor model parameters
-        sm_params.inv_var_hit = 1 / (std_h * std_h);
+        sm_params.p_hit_std = std_h;
         sm_params.lambda_short = lambda_s;
     }
 

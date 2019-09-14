@@ -87,7 +87,7 @@ int main(int argc, const char * argv[])
         LASER_MAX_RANGE,
         LASER_THETA_STEP,
         LASER_DIST_STEP,
-        INV_VAR_HIT,
+        P_HIT_STD,
         LAMBDA_SHORT,
         LASER_OFFSET,
         FREE_SPACE_THRESH,

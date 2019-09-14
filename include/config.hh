@@ -15,15 +15,15 @@
 #define ALPHA_4 0.01
 
 // Sensor model parameters
-#define Z_HIT   0.1
-#define Z_SHORT 0.1
-#define Z_MAX   0.1
-#define Z_RAND  0.1
+#define Z_HIT   0.7
+#define Z_SHORT 0.15
+#define Z_MAX   0.075
+#define Z_RAND  0.075
 #define LASER_MAX_RANGE     8191.0  // cm
 #define LASER_THETA_STEP    1       // degrees
 #define LASER_DIST_STEP     1       // cm
-#define INV_VAR_HIT         0.1
-#define LAMBDA_SHORT        0.1
+#define P_HIT_STD           40      // cm
+#define LAMBDA_SHORT        0.01
 #define LASER_OFFSET        25.0    // cm
 #define FREE_SPACE_THRESH   0.9
 

@@ -16,7 +16,7 @@ typedef struct sensor_model_parms {
     double z_max_range;     // maximum sensor range
     int z_theta_step;       // step size between sensor measurements (degrees)
     int z_dist_step;        // step size along sensor ray (cm)
-    double inv_var_hit;     // inverse of the variance of p_hit
+    double p_hit_std;       // standard deviation of p_hit
     double lambda_short;    // lambda of p_short
     double laser_offset;    // gap between robot center and laser
     double threshold;        // prob > threshold means free space.
