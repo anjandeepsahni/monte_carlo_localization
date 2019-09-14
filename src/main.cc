@@ -11,37 +11,37 @@
 using namespace std;
 
 
-vector<state_t> init_particles_random(int num_particles, map_type map)
+vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=false)
 {
     vector<state_t> x_bar_init(num_particles);
     default_random_engine generator;
 
-    double start_x = map.min_x * map.resolution;
-    double end_x = map.max_x * map.resolution;
+    double res = map.resolution;
+    double start_x = map.min_x * res;
+    double end_x = map.max_x * res;
     // Account for flipped y axis.
-    double start_y = (map.size_y - map.max_y) * map.resolution;
-    double end_y = (map.size_y - map.min_y) * map.resolution;
+    double start_y = (map.size_y - map.max_y) * res;
+    double end_y = (map.size_y - map.min_y) * res;
     uniform_real_distribution<double> dist_x(start_x, end_x);
     uniform_real_distribution<double> dist_y(start_y, end_y);
     uniform_real_distribution<double> dist_theta(-3.14, 3.14);
+    double w = (double)(1.0 / (double)num_particles);
     for (int m = 0; m < num_particles; m++)
     {
-        double x = dist_x(generator);
-        double y = dist_y(generator);
-        double theta = dist_theta(generator);
-        double w = 1 / num_particles;
+        double x, y, theta;
+        // If freeSpace = true, keep looping until we find a particle in free space.
+        do
+        {
+            x = dist_x(generator);
+            y = dist_y(generator);
+            theta = dist_theta(generator);
+        } while (freeSpace and (map.prob[(int)(x/res)][map.size_y - (int)(y/res)] == -1 ||
+                 map.prob[(int)(x/res)][map.size_y - (int)(y/res)] <= 0.9));
+
         state_t meas = {x, y, theta, w};
         x_bar_init[m] = meas;
     }
 
-    return x_bar_init;
-}
-
-
-// TODO: Implement this function
-vector<state_t> init_particles_freespace(int num_particles)
-{
-    vector<state_t> x_bar_init(num_particles);
     return x_bar_init;
 }
 
@@ -87,8 +87,8 @@ int main(int argc, const char * argv[])
         1.0,    // z_theta_step
         0.1,    // inv_var_hit
         0.1,    // lambda_short
-        25,    // laser_offset
-        0.8,    // threshold
+        25,     // laser_offset
+        0.9,    // threshold
         occupancy_map // occupancy_map
     };
     SensorModel sensor_model = SensorModel(sm_init);
@@ -97,7 +97,7 @@ int main(int argc, const char * argv[])
     bool vis_flag = true;
     int num_particles = 500;
     vector<state_t> x_bar;
-    x_bar = init_particles_random(num_particles, occupancy_map);
+    x_bar = init_particles(num_particles, occupancy_map, true);
 
     /*
      * Monte Carlo Localization Algorithm
@@ -106,7 +106,8 @@ int main(int argc, const char * argv[])
     if (vis_flag)
     {
         // Visualize initial particles.
-//        map_obj.visualize_map(x_bar);
+        map_obj.visualize_map(x_bar);
+        exit(0);
 
         // Visualize ray casting.
 //        map_obj.visualize_map(x_bar, false, true, &sensor_model);
