@@ -138,7 +138,8 @@ int MapReader::visulize_map(vector<state_t> x_bar, bool storeForVideo)
     {
         for (int i=0; i < x_bar.size(); ++i)
         {
-            circle(image_color, Point_<int>((int)(x_bar[i].y/res), (int)(x_bar[i].x/res)), 1, Scalar(0, 0, 255), 2, 8);
+//            cout << x_bar[i].x << " " << x_bar[i].y << endl;
+            circle(image_color, Point_<int>((int)(x_bar[i].x/res), (int)(x_bar[i].y/res)), 1, Scalar(0, 0, 255), 2, 8);
         }
     }
 
@@ -151,6 +152,7 @@ int MapReader::visulize_map(vector<state_t> x_bar, bool storeForVideo)
     {
         imshow("Image", image_color);
         waitKey(0);
+        destroyWindow("Image");
     }
     return 0;
 }

@@ -32,7 +32,7 @@ double SensorModel::beam_range_finder_model(const vector<double> z_t1,
         double z = z_t1[i];
         double p, p_h, p_s, p_m, p_r;
         // Angle wrt x axis
-        double angle = (double)i * M_PI / 180 + x_t1.theta - M_PI_2;
+        double angle = ((double)i * (M_PI / 180)) + x_t1.theta - M_PI_2;
         double z_true = ray_casting(x_t1, angle);
         p_h = p_hit(z, z_true);
         p_s = p_short(z, z_true);

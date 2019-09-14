@@ -15,8 +15,8 @@ vector<state_t> init_particles_random(int num_particles)
 {
     vector<state_t> x_bar_init(num_particles);
     default_random_engine generator;
-    uniform_real_distribution<double> dist_x(3000, 7000);
-    uniform_real_distribution<double> dist_y(0, 7000);
+    uniform_real_distribution<double> dist_x(400, 8000);
+    uniform_real_distribution<double> dist_y(3000, 7000);
     uniform_real_distribution<double> dist_theta(-3.14, 3.14);
     for (int m = 0; m < num_particles; m++)
     {
@@ -99,7 +99,7 @@ int main(int argc, const char * argv[])
 
     if (vis_flag)
     {
-        // map_obj.visulize_map();
+//         map_obj.visulize_map(x_bar);
     }
 
     ifstream log_file (src_path_log);   // Read the log file
@@ -147,7 +147,7 @@ int main(int argc, const char * argv[])
                     ranges.push_back(meas_vals[i]);
             }
 
-            cout << "Processing time step " << time_idx + 1;
+            cout << "Processing time step " << time_idx;
             cout << " at time " << time_stamp;
             cout << endl;
 
@@ -159,6 +159,7 @@ int main(int argc, const char * argv[])
 
             vector<state_t> x_bar_new(num_particles);
             u_t1 = odometry_robot;
+            double w_t_sum = 0;
             // For all particles
             for (int m = 0; m < num_particles; m++)
             {
@@ -173,8 +174,8 @@ int main(int argc, const char * argv[])
                     double w_t;
                     z_t = ranges;
                     w_t = sensor_model.beam_range_finder_model(z_t, x_t1);
-                    w_t = 1 / num_particles;
                     x_t1.weight = w_t;
+                    w_t_sum += w_t;
                 }
                 else
                 {
@@ -182,6 +183,13 @@ int main(int argc, const char * argv[])
                 }
 
                 x_bar_new[m] = x_t1;
+            }
+
+            // Normalize weights.
+            for (int m = 0; m < num_particles; m++)
+            {
+                x_bar_new[m].weight /= w_t_sum;
+                cout << x_bar_new[m].x << " " << x_bar_new[m].y << " " << x_bar_new[m].weight << endl;
             }
 
             x_bar = x_bar_new;
