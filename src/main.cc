@@ -7,6 +7,7 @@
 #include "motionModel.hh"
 #include "resampler.hh"
 #include "particleFilter.hh"
+#include "config.hh"
 
 using namespace std;
 
@@ -67,8 +68,8 @@ int main(int argc, const char * argv[])
      * Initialize Parameters
      */
 
-    string src_path_map = "../data/map/wean.dat";
-    string src_path_log = "../data/log/robotdata1.log";
+    string src_path_map = MAP_FILE_PATH;
+    string src_path_log = LOG_FILE_PATH;
 
     // Get occupancy map
     MapReader map_obj = MapReader(src_path_map);
@@ -77,25 +78,26 @@ int main(int argc, const char * argv[])
     map_type occupancy_map = map_obj.map;
 
     // Instantiate Motion Model, Sensor Model and Resampler
-    MotionModel motion_model = MotionModel(0.01, 0.01, 0.01, 0.01);
+    MotionModel motion_model = MotionModel(ALPHA_1, ALPHA_2, ALPHA_3, ALPHA_4);
     sm_t sm_init = {
-        0.1,    // z_hit
-        0.1,    // z_short
-        0.1,    // z_max
-        0.1,    // z_rand
-        8191.0, // z_max_range
-        1.0,    // z_theta_step
-        0.1,    // inv_var_hit
-        0.1,    // lambda_short
-        25,     // laser_offset
-        0.9,    // threshold
+        Z_HIT,
+        Z_SHORT,
+        Z_MAX,
+        Z_RAND,
+        LASER_MAX_RANGE,
+        LASER_THETA_STEP,
+        LASER_DIST_STEP,
+        INV_VAR_HIT,
+        LAMBDA_SHORT,
+        LASER_OFFSET,
+        FREE_SPACE_THRESH,
         occupancy_map // occupancy_map
     };
     SensorModel sensor_model = SensorModel(sm_init);
     Resampler resampler = Resampler();
 
     bool vis_flag = true;
-    int num_particles = 500;
+    int num_particles = NUM_PARTICLES;
     vector<state_t> x_bar;
     x_bar = init_particles(num_particles, occupancy_map, true);
 
@@ -103,15 +105,16 @@ int main(int argc, const char * argv[])
      * Monte Carlo Localization Algorithm
      */
 
+#ifdef MAP_VISUALIZE
     if (vis_flag)
     {
         // Visualize initial particles.
-        map_obj.visualize_map(x_bar);
-        exit(0);
+//        map_obj.visualize_map(x_bar);
 
         // Visualize ray casting.
 //        map_obj.visualize_map(x_bar, false, true, &sensor_model);
     }
+#endif
 
     ifstream log_file (src_path_log);   // Read the log file
     if (log_file.is_open())
@@ -146,9 +149,11 @@ int main(int argc, const char * argv[])
                 odometry_robot.push_back(meas_vals[i]);
             double time_stamp = meas_vals[meas_vals.size() - 1];
 
+#ifdef SKIP_ODO_READINGS
             // Ignoring odometry reading
             if ((time_stamp <= 0.0) || (meas_type == 'O'))
                 continue;
+#endif
 
             if (meas_type == 'L')
             {
@@ -210,10 +215,12 @@ int main(int argc, const char * argv[])
             // Resampling
             x_bar = resampler.low_variance_sampler(x_bar);
 
+#ifdef MAP_VISUALIZE
             if (vis_flag)
             {
                 map_obj.visualize_map(x_bar, true);
             }
+#endif
         }
 
         log_file.close();
@@ -225,6 +232,8 @@ int main(int argc, const char * argv[])
         cout << endl;
     }
 
+#ifdef MAP_VISUALIZE
     map_obj.save_video("../result/robotmovie.avi");
+#endif
     return 0;
 }

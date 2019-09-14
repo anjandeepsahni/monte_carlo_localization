@@ -11,14 +11,13 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#endif /* MAP_VISUALIZE */
+#endif
 
 using namespace std;
 
-
 #ifdef MAP_VISUALIZE
 using namespace cv;
-#endif /* MAP_VISUALIZE */
+#endif
 
 MapReader::MapReader(string mapName): mapName(mapName)
 {

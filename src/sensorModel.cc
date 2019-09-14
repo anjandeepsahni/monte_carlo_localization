@@ -14,6 +14,7 @@ SensorModel::SensorModel(sm_t sm_p)
     sm_params.z_rand = sm_p.z_rand;
     sm_params.z_max_range = sm_p.z_max_range;
     sm_params.z_theta_step = sm_p.z_theta_step;
+    sm_params.z_dist_step = sm_p.z_dist_step;
     sm_params.inv_var_hit = sm_p.inv_var_hit;
     sm_params.lambda_short = sm_p.lambda_short;
     sm_params.laser_offset = sm_p.laser_offset;
@@ -119,7 +120,7 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
     double x = x_t1.x + sm_params.laser_offset * cos(x_t1.theta);
     double y = x_t1.y + sm_params.laser_offset * sin(x_t1.theta);
     // Step size along the ray
-    int step = 1;
+    int step = sm_params.z_dist_step;
     // Move along ray and find first obstacle
     int obs_dist = sm_params.z_max_range;
     // Start ray tracing from dist=0, in case particle is at occupied location

@@ -1,20 +1,21 @@
 #ifndef _MAPREADER_H
 #define _MAPREADER_H
 
-#define MAP_VISUALIZE
-
 #include <iostream>
 #include <vector>
 #include <stdio.h>
 #include "particleFilter.hh"
+#include "config.hh"
 
 #ifdef MAP_VISUALIZE
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#endif /* MAP_VISUALIZE */
+#endif
 
 using namespace std;
+#ifdef MAP_VISUALIZE
 using namespace cv;
+#endif
 
 class SensorModel;  // Forward declaration
 
@@ -31,12 +32,16 @@ class MapReader
 public:
     map_type map;
     string mapName;
+#ifdef MAP_VISUALIZE
     vector<Mat> videoFrames;
+#endif
 
     MapReader(string mapName);
     int read_map();
+#ifdef MAP_VISUALIZE
     int visualize_map(vector<state_t> x_bar={}, bool storeForVideo=false, bool visRays=false, SensorModel* sensor_model=NULL);
     int save_video(string videoPath);
+#endif
 };
 
 #endif  /* _MAPREADER_H */
