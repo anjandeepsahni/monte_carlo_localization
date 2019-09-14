@@ -11,12 +11,18 @@
 using namespace std;
 
 
-vector<state_t> init_particles_random(int num_particles)
+vector<state_t> init_particles_random(int num_particles, map_type map)
 {
     vector<state_t> x_bar_init(num_particles);
     default_random_engine generator;
-    uniform_real_distribution<double> dist_x(400, 8000);
-    uniform_real_distribution<double> dist_y(3000, 7000);
+
+    double start_x = map.min_x * map.resolution;
+    double end_x = map.max_x * map.resolution;
+    // Account for flipped y axis.
+    double start_y = (map.size_y - map.max_y) * map.resolution;
+    double end_y = (map.size_y - map.min_y) * map.resolution;
+    uniform_real_distribution<double> dist_x(start_x, end_x);
+    uniform_real_distribution<double> dist_y(start_y, end_y);
     uniform_real_distribution<double> dist_theta(-3.14, 3.14);
     for (int m = 0; m < num_particles; m++)
     {
@@ -91,7 +97,7 @@ int main(int argc, const char * argv[])
     bool vis_flag = true;
     int num_particles = 500;
     vector<state_t> x_bar;
-    x_bar = init_particles_random(num_particles);
+    x_bar = init_particles_random(num_particles, occupancy_map);
 
     /*
      * Monte Carlo Localization Algorithm

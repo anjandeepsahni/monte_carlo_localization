@@ -127,6 +127,8 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
     {
         double x_end = (x + dist * cos(angle)) / map_res;
         double y_end = (y + dist * sin(angle)) / map_res;
+        // Account for flipped y axis.
+        y_end = sm_params.occupancy_map.size_y - y_end;
         if (x_end > sm_params.occupancy_map.max_x or
             x_end < sm_params.occupancy_map.min_x or
             y_end > sm_params.occupancy_map.max_y or
