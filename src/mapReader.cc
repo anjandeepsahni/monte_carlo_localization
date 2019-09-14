@@ -4,6 +4,7 @@
 #include <string.h>
 #include <cstring>
 #include "mapReader.hh"
+#include "sensorModel.hh"
 #include "particleFilter.hh"
 
 #ifdef MAP_VISUALIZE
@@ -13,6 +14,7 @@
 #endif /* MAP_VISUALIZE */
 
 using namespace std;
+
 
 #ifdef MAP_VISUALIZE
 using namespace cv;
@@ -101,7 +103,7 @@ int MapReader::read_map()
                     map.min_y = y;
                 else if(y > map.max_y)
                     map.max_y = y;
-                // probability of (x,y) being occupied
+                // probability of (x,y) being free
                 prob.push_back(temp);
             }
         }
@@ -116,7 +118,7 @@ int MapReader::read_map()
 
 #ifdef MAP_VISUALIZE
 
-int MapReader::visulize_map(vector<state_t> x_bar, bool storeForVideo)
+int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool visRays, SensorModel* sensor_model)
 {
     int res = map.resolution;
 
@@ -133,13 +135,30 @@ int MapReader::visulize_map(vector<state_t> x_bar, bool storeForVideo)
 
     Mat image_color = Mat::zeros(map.size_x, map.size_y, CV_32FC3);
     cvtColor(image, image_color, COLOR_GRAY2BGR);
-    
+
     if (!x_bar.empty())
     {
         for (int i=0; i < x_bar.size(); ++i)
         {
-//            cout << x_bar[i].x << " " << x_bar[i].y << endl;
-            circle(image_color, Point_<int>((int)(x_bar[i].x/res), (int)(x_bar[i].y/res)), 1, Scalar(0, 0, 255), 2, 8);
+            state_t x_t1 = x_bar[i];
+
+            circle(image_color, Point_<int>((int)(x_t1.x/res), (int)(x_t1.y/res)), 1, Scalar(0, 0, 255), 2, 8);
+
+            if (visRays)
+            {
+                double x = x_t1.x + 25 * cos(x_t1.theta);
+                double y = x_t1.y + 25 * sin(x_t1.theta);
+
+                for (int j = 0; j < 180; j+=5)
+                {
+                    // Angle wrt x axis
+                    double angle = ((double)j * (M_PI / 180)) + x_t1.theta - M_PI_2;
+                    double dist = sensor_model->ray_casting(x_t1, angle);
+                    double x_end = (x + dist * cos(angle));
+                    double y_end = (y + dist * sin(angle));
+                    line(image_color, Point_<int>((int)(x/res), (int)(y/res)), Point_<int>((int)(x_end/res), (int)(y_end/res)), Scalar(255, 0, 0));
+                }
+            }
         }
     }
 

@@ -71,7 +71,7 @@ int main(int argc, const char * argv[])
     map_type occupancy_map = map_obj.map;
 
     // Instantiate Motion Model, Sensor Model and Resampler
-    MotionModel motion_model = MotionModel(0.1, 0.1, 0.1, 0.1);
+    MotionModel motion_model = MotionModel(0.01, 0.01, 0.01, 0.01);
     sm_t sm_init = {
         0.1,    // z_hit
         0.1,    // z_short
@@ -81,7 +81,7 @@ int main(int argc, const char * argv[])
         1.0,    // z_theta_step
         0.1,    // inv_var_hit
         0.1,    // lambda_short
-        1.0,    // laser_offset
+        25,    // laser_offset
         0.8,    // threshold
         occupancy_map // occupancy_map
     };
@@ -99,7 +99,11 @@ int main(int argc, const char * argv[])
 
     if (vis_flag)
     {
-//         map_obj.visulize_map(x_bar);
+        // Visualize initial particles.
+//        map_obj.visualize_map(x_bar);
+
+        // Visualize ray casting.
+//        map_obj.visualize_map(x_bar, false, true, &sensor_model);
     }
 
     ifstream log_file (src_path_log);   // Read the log file
@@ -166,7 +170,9 @@ int main(int argc, const char * argv[])
                 // Motion model
                 x_t0 = x_bar[m];
                 x_t1 = motion_model.update(u_t0, u_t1, x_t0);
-                x_bar_new[m] = x_t1;
+
+                // Debug
+//                x_t1.weight = (float)(1.0 / (float)num_particles);
 
                 // Sensor model
                 if (meas_type == 'L')
@@ -189,7 +195,6 @@ int main(int argc, const char * argv[])
             for (int m = 0; m < num_particles; m++)
             {
                 x_bar_new[m].weight /= w_t_sum;
-                cout << x_bar_new[m].x << " " << x_bar_new[m].y << " " << x_bar_new[m].weight << endl;
             }
 
             x_bar = x_bar_new;
@@ -200,7 +205,7 @@ int main(int argc, const char * argv[])
 
             if (vis_flag)
             {
-                map_obj.visulize_map(x_bar, true);
+                map_obj.visualize_map(x_bar, true);
             }
         }
 

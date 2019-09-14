@@ -16,6 +16,7 @@
 using namespace std;
 using namespace cv;
 
+class SensorModel;  // Forward declaration
 
 typedef struct {
     int resolution, size_x, size_y;
@@ -34,7 +35,7 @@ public:
 
     MapReader(string mapName);
     int read_map();
-    int visulize_map(vector<state_t> x_bar={}, bool storeForVideo=false);
+    int visualize_map(vector<state_t> x_bar={}, bool storeForVideo=false, bool visRays=false, SensorModel* sensor_model=NULL);
     int save_video(string videoPath);
 };
 

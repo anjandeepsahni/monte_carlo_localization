@@ -49,8 +49,8 @@ state_t MotionModel::update(vector<double> u_t0, vector<double> u_t1, state_t x_
 
     // converting parameters from the robot's coordinate frame to the world coordinate frame, again by simple trignometric calculations. 
     state_t st;
-    st.x = x_t0.x + ddash_trans* cos(x_t0.y + ddash_rot1);
-    st.y = x_t0.y + ddash_trans* sin(x_t0.y + ddash_rot1);
+    st.x = x_t0.x + ddash_trans* cos(x_t0.theta + ddash_rot1);
+    st.y = x_t0.y + ddash_trans* sin(x_t0.theta + ddash_rot1);
     st.theta = x_t0.theta + ddash_rot1 + ddash_rot2;
     st.weight = 0.0;
     

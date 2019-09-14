@@ -24,7 +24,6 @@ typedef struct sensor_model_parms {
 } sm_t;
 
 
-
 class SensorModel
 {
 private:
