@@ -34,12 +34,12 @@ state_t MotionModel::update(vector<double> u_t0, vector<double> u_t1, state_t x_
 
     //standard deviation for each parmeter used in the next segment 
     term1 = alpha1*del_rot1 + alpha2*del_trans;
-    term2= alpha3*del_trans + alpha4*(del_rot1 + del_rot2);
-    term3= alpha1*del_rot2 + alpha2*del_trans;
+    term2 = alpha3*del_trans + alpha4*(del_rot1 + del_rot2);
+    term3 = alpha1*del_rot2 + alpha2*del_trans;
 
-    normal_distribution<double> d1{0, term1};
-    normal_distribution<double> d2{0, term2};
-    normal_distribution<double> d3{0, term3};
+    normal_distribution<double> d1{0, sqrt(term1)};
+    normal_distribution<double> d2{0, sqrt(term2)};
+    normal_distribution<double> d3{0, sqrt(term3)};
     //Gaussian noise distribution with zero mean and sd for each paramter modelling the noise of each parameter
     random_device rd{};
     mt19937 gen{rd()};
