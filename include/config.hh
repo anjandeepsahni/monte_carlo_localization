@@ -9,20 +9,20 @@
 #define MAP_VISUALIZE
 
 // Motion model parameters
-#define ALPHA_1 0.01
-#define ALPHA_2 0.01
-#define ALPHA_3 0.01
-#define ALPHA_4 0.01
+#define ALPHA_1 0.1
+#define ALPHA_2 0.1
+#define ALPHA_3 0.1
+#define ALPHA_4 0.1
 
 // Sensor model parameters
 #define Z_HIT   0.7
-#define Z_SHORT 0.15
-#define Z_MAX   0.075
-#define Z_RAND  0.075
+#define Z_SHORT 0.24
+#define Z_MAX   0.0055
+#define Z_RAND  0.0545
 #define LASER_MAX_RANGE     8191.0  // cm
 #define LASER_THETA_STEP    1       // degrees
 #define LASER_DIST_STEP     1       // cm
-#define P_HIT_STD           40      // cm
+#define P_HIT_STD           20      // cm
 #define LAMBDA_SHORT        0.01
 #define LASER_OFFSET        25.0    // cm
 #define FREE_SPACE_THRESH   0.9

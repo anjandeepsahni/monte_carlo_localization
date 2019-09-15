@@ -45,10 +45,10 @@ double SensorModel::beam_range_finder_model(const vector<double> z_t1,
 
         p = sm_params.z_hit * p_h + sm_params.z_short * p_s
             + sm_params.z_max * p_m + sm_params.z_rand * p_r;
-        q += log(p);
+        q += log(p+1);  // Add 1 to move out of inverse mapping of log between 0-1.
     }
 
-    return -q;  // Negative log likelihood
+    return q;  // Log likelihood
 }
 
 

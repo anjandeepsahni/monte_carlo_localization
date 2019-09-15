@@ -214,6 +214,7 @@ int main(int argc, const char * argv[])
 
             // Resampling
             x_bar = resampler.low_variance_sampler(x_bar);
+//            x_bar = resampler.multinomial_sampler(x_bar);
 
 #ifdef MAP_VISUALIZE
             if (vis_flag)
