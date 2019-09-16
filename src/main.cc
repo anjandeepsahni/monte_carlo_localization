@@ -185,7 +185,7 @@ int main(int argc, const char * argv[])
 
                 // Debug
 //                x_t1.weight = (float)(1.0 / (float)num_particles);
-
+                
                 // Sensor model
                 if (meas_type == 'L')
                 {
@@ -232,6 +232,7 @@ int main(int argc, const char * argv[])
         cout << "Log file " << src_path_log << " could not be opened.";
         cout << endl;
     }
+
 
 #ifdef MAP_VISUALIZE
     map_obj.save_video("../result/robotmovie.avi");

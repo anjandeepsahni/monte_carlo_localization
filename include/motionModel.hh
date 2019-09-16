@@ -13,7 +13,7 @@ class MotionModel
     double alpha1, alpha2, alpha3, alpha4;
 
     public:
-        MotionModel(double alpha1, double aplha2, double alpha3, double alpha4);
+        MotionModel(double a1, double a2, double a3, double a4);
 
         ~MotionModel();
 
