@@ -25,6 +25,6 @@
 #define P_HIT_STD           20      // cm
 #define LAMBDA_SHORT        0.01
 #define LASER_OFFSET        25.0    // cm
-#define FREE_SPACE_THRESH   0.9
+#define FREE_SPACE_THRESH   0.999
 
 #endif /* _CONFIG_H */
