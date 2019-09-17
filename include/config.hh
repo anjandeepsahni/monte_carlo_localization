@@ -9,10 +9,10 @@
 #define MAP_VISUALIZE
 
 // Motion model parameters
-#define ALPHA_1 0
-#define ALPHA_2 0
-#define ALPHA_3 0
-#define ALPHA_4 0
+#define ALPHA_1 0.01
+#define ALPHA_2 0.01
+#define ALPHA_3 0.1
+#define ALPHA_4 0.1
 
 // Sensor model parameters
 #define Z_HIT   0.7
