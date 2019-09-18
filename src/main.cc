@@ -20,9 +20,14 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
     double res = map.resolution;
     double start_x = map.min_x * res;
     double end_x = map.max_x * res;
+#ifdef FLIP_Y_AXIS
     // Account for flipped y axis.
     double start_y = (map.size_y - map.max_y) * res;
     double end_y = (map.size_y - map.min_y) * res;
+#else
+    double start_y = map.max_y * res;
+    double end_y = map.min_y * res;
+#endif
     uniform_real_distribution<double> dist_x(start_x, end_x);
     uniform_real_distribution<double> dist_y(start_y, end_y);
     uniform_real_distribution<double> dist_theta(-3.14, 3.14);
@@ -36,8 +41,13 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
             x = dist_x(generator);
             y = dist_y(generator);
             theta = dist_theta(generator);
+#ifdef FLIP_Y_AXIS
         } while (freeSpace and (map.prob[(int)(x/res)][map.size_y - (int)(y/res)] == -1 ||
-                 map.prob[(int)(x/res)][map.size_y - (int)(y/res)] <= 0.9));
+                 map.prob[(int)(x/res)][map.size_y - (int)(y/res)] <= FREE_SPACE_THRESH));
+#else
+    } while (freeSpace and (map.prob[(int)(x/res)][(int)(y/res)] == -1 ||
+                            map.prob[(int)(x/res)][(int)(y/res)] <= FREE_SPACE_THRESH));
+#endif
 
         state_t meas = {x, y, theta, w};
         x_bar_init[m] = meas;

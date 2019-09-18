@@ -14,9 +14,6 @@ class MotionModel
 
     public:
         MotionModel(double a1, double a2, double a3, double a4);
-
-        ~MotionModel();
-
         state_t update(vector<double>, vector<double>, state_t);
 };
 
