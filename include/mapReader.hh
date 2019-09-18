@@ -39,7 +39,7 @@ public:
     MapReader(string mapName);
     int read_map();
 #ifdef MAP_VISUALIZE
-    int visualize_map(vector<state_t> x_bar={}, bool storeForVideo=false, bool visRays=false, SensorModel* sensor_model=NULL);
+    int visualize_map(vector<state_t> x_bar={}, bool storeForVideo=false, bool visRays=false, SensorModel* sensor_model=NULL, bool visMeas=false, vector<double> z_t={});
     int save_video(string videoPath);
 #endif
 };

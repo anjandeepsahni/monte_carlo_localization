@@ -116,8 +116,14 @@ int MapReader::read_map()
 
 #ifdef MAP_VISUALIZE
 
-int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool visRays, SensorModel* sensor_model)
+int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool visRays, SensorModel* sensor_model, bool visMeas, vector<double> z_t)
 {
+    if (visRays & visMeas)
+        throw runtime_error("Cannot visualize both ray casting and sensor measurements together !");
+
+    if (visMeas && (z_t.size() != MAX_SENSOR_THETA))
+        throw runtime_error("Requested visualization of measurements but z_t does not have enough elements!");
+
     int res = map.resolution;
 
     // Mat is accessed as (row,col), which means (y,x)
@@ -167,16 +173,20 @@ int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool vis
             Point particle = Point_<int>((int)(x_t1.x/res), (int)(x_t1.y/res));
             circle(image, particle, 1, Scalar(0, 0, 255), 2, 8);
 
-            if (visRays)
+            if (visRays || visMeas)
             {
                 double x = x_t1.x + 25 * cos(x_t1.theta);
                 double y = x_t1.y + 25 * sin(x_t1.theta);
                 Point ray_start = Point_<int>((int)(x/res), (int)(y/res));
-                for (int j = 0; j < 180; j+=5)
+                for (int j = 0; j < MAX_SENSOR_THETA; j+=5)
                 {
                     // Angle wrt x axis
                     double angle = ((double)j * (M_PI / 180)) + x_t1.theta - M_PI_2;
-                    double dist = sensor_model->ray_casting(x_t1, angle);
+                    double dist;
+                    if (visRays)
+                        dist = sensor_model->ray_casting(x_t1, angle);
+                    else
+                        dist = z_t[j];
                     double x_end = (x + dist * cos(angle));
                     double y_end = (y + dist * sin(angle));
                     Point ray_end = Point_<int>((int)(x_end/res), (int)(y_end/res));

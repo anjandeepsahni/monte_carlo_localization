@@ -27,5 +27,6 @@
 #define LAMBDA_SHORT        0.01
 #define LASER_OFFSET        25.0    // cm
 #define FREE_SPACE_THRESH   0.999
+#define MAX_SENSOR_THETA    180     // degrees
 
 #endif /* _CONFIG_H */

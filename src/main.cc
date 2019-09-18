@@ -229,7 +229,8 @@ int main(int argc, const char * argv[])
 #ifdef MAP_VISUALIZE
             if (vis_flag)
             {
-                map_obj.visualize_map(x_bar, true);
+//                map_obj.visualize_map(x_bar, true);
+                map_obj.visualize_map(x_bar, true, false, NULL, true, ranges);
             }
 #endif
         }
