@@ -16,20 +16,8 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
 {
     vector<state_t> x_bar_init(num_particles);
     default_random_engine generator;
-
-    double res = map.resolution;
-    double start_x = map.min_x * res;
-    double end_x = map.max_x * res;
-#ifdef FLIP_Y_AXIS
-    // Account for flipped y axis.
-    double start_y = (map.size_y - map.max_y) * res;
-    double end_y = (map.size_y - map.min_y) * res;
-#else
-    double start_y = map.max_y * res;
-    double end_y = map.min_y * res;
-#endif
-    uniform_real_distribution<double> dist_x(start_x, end_x);
-    uniform_real_distribution<double> dist_y(start_y, end_y);
+    uniform_real_distribution<double> dist_x(map.min_x, map.max_x);
+    uniform_real_distribution<double> dist_y(map.min_y, map.max_y);
     uniform_real_distribution<double> dist_theta(-3.14, 3.14);
     double w = (double)(1.0 / (double)num_particles);
     for (int m = 0; m < num_particles; m++)
@@ -41,13 +29,7 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
             x = dist_x(generator);
             y = dist_y(generator);
             theta = dist_theta(generator);
-#ifdef FLIP_Y_AXIS
-        } while (freeSpace and (map.prob[(int)(x/res)][map.size_y - (int)(y/res)] == -1 ||
-                 map.prob[(int)(x/res)][map.size_y - (int)(y/res)] <= FREE_SPACE_THRESH));
-#else
-    } while (freeSpace and (map.prob[(int)(x/res)][(int)(y/res)] == -1 ||
-                            map.prob[(int)(x/res)][(int)(y/res)] <= FREE_SPACE_THRESH));
-#endif
+    } while (freeSpace and (map.prob[(int)x][(int)y] <= FREE_SPACE_THRESH));
 
         state_t meas = {x, y, theta, w};
         x_bar_init[m] = meas;
@@ -119,7 +101,8 @@ int main(int argc, const char * argv[])
     if (vis_flag)
     {
         // Visualize initial particles.
-//        map_obj.visualize_map(x_bar);
+        map_obj.visualize_map(x_bar);
+        exit(0);
 
         // Visualize ray casting.
 //        map_obj.visualize_map(x_bar, false, true, &sensor_model);
@@ -229,8 +212,8 @@ int main(int argc, const char * argv[])
 #ifdef MAP_VISUALIZE
             if (vis_flag)
             {
-                map_obj.visualize_map(x_bar, true);
-//                map_obj.visualize_map(x_bar, true, false, NULL, true, ranges);
+//                map_obj.visualize_map(x_bar, true);
+                map_obj.visualize_map(x_bar, true, false, NULL, true, ranges);
             }
 #endif
         }

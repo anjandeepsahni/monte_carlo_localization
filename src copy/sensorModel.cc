@@ -35,19 +35,9 @@ double SensorModel::beam_range_finder_model(const vector<double> z_t1,
     {
         double z = z_t1[i];
         double p, p_h, p_s, p_m, p_r;
-
         // Angle wrt x axis
         double angle = ((double)i * (M_PI / 180)) + x_t1.theta - M_PI_2;
         double z_true = ray_casting(x_t1, angle);
-
-        if ((int)z_true == 0)
-            // Laser is out of valid range.
-            return 0.0;
-        if ((int)z_true == -1)
-            // Angle's reading went from valid range to invalid range
-            // without finding an obstacle. Skip this angle's reading.
-            continue;
-
         p_h = p_hit(z, z_true);
         p_s = p_short(z, z_true);
         p_m = p_max(z);
@@ -131,36 +121,26 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
 {
     // Adjust for laser offset. Adjust by for map resolution.
     double map_res = sm_params.occupancy_map.resolution;
-    double x = x_t1.x + sm_params.laser_offset * cos(x_t1.theta);   // laser x
-    double y = x_t1.y + sm_params.laser_offset * sin(x_t1.theta);   // laser y
-    // Check if laser is out of valid area.
-    if ((int)(x/map_res) > sm_params.occupancy_map.max_x ||
-        (int)(x/map_res) < sm_params.occupancy_map.min_x ||
-        (int)(y/map_res) > sm_params.occupancy_map.max_y ||
-        (int)(y/map_res) < sm_params.occupancy_map.min_y)
-        return 0.0;
+    double x = x_t1.x + (sm_params.laser_offset/map_res) * cos(x_t1.theta);
+    double y = x_t1.y + (sm_params.laser_offset/map_res) * sin(x_t1.theta);
     // Step size along the ray
     int step = sm_params.z_dist_step;
     // Move along ray and find first obstacle
     int obs_dist = sm_params.z_max_range;
     // Start ray tracing from dist=0, in case particle is at occupied location
-    for (int dist=1; dist <= sm_params.z_max_range; dist=dist+step)
+    for (int dist=0; dist <= sm_params.z_max_range; dist=dist+step)
     {
-        int x_end = (int)((x + dist * cos(angle)) / map_res);
-        int y_end = (int)((y + dist * sin(angle)) / map_res);
-#ifdef FLIP_Y_AXIS
-        // Account for flipped y axis.
-        y_end = sm_params.occupancy_map.size_y - y_end;
-#endif
+        double x_end = (x + dist * cos(angle - M_PI_2));
+        double y_end = (y + dist * sin(angle - M_PI_2));
         if (x_end > sm_params.occupancy_map.max_x ||
             x_end < sm_params.occupancy_map.min_x ||
             y_end > sm_params.occupancy_map.max_y ||
-            y_end < sm_params.occupancy_map.min_y ||
-            sm_params.occupancy_map.prob[x_end][y_end] < 0)
+            y_end < sm_params.occupancy_map.min_y)
         {
-            return -1.0;    // Skip this angle's reading
+            obs_dist = dist;
+            break;
         }
-        else if (sm_params.occupancy_map.prob[x_end][y_end] <= sm_params.threshold)
+        else if (sm_params.occupancy_map.prob[(int)x_end][(int)y_end] <= sm_params.threshold)
         {
             obs_dist = dist;
             break;
