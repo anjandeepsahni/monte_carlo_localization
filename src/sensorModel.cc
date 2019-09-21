@@ -43,10 +43,6 @@ double SensorModel::beam_range_finder_model(const vector<double> z_t1,
         if ((int)z_true == 0)
             // Laser is out of valid range.
             return 0.0;
-        if ((int)z_true == -1)
-            // Angle's reading went from valid range to invalid range
-            // without finding an obstacle. Skip this angle's reading.
-            continue;
 
         p_h = p_hit(z, z_true);
         p_s = p_short(z, z_true);
@@ -158,7 +154,8 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
             y_end < sm_params.occupancy_map.min_y ||
             sm_params.occupancy_map.prob[x_end][y_end] < 0)
         {
-            return -1.0;    // Skip this angle's reading
+            obs_dist = dist;
+            break;
         }
         else if (sm_params.occupancy_map.prob[x_end][y_end] <= sm_params.threshold)
         {
