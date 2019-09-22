@@ -42,6 +42,11 @@ public:
     int visualize_map(vector<state_t> x_bar={}, bool storeForVideo=false, bool visRays=false, SensorModel* sensor_model=NULL, bool visMeas=false, vector<double> z_t={});
     int save_video(string videoPath);
 #endif
+#ifdef MOTION_MODEL_VISUALIZE
+    int visualize_motion_map(vector<state_t> x_bar={})
+#endif
+
+
 };
 
 #endif  /* _MAPREADER_H */

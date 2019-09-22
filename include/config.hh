@@ -7,6 +7,7 @@
 #define LOG_FILE_PATH "../data/log/robotdata2.log"
 #define SKIP_ODO_READINGS
 #define MAP_VISUALIZE
+#define MOTION_MODEL_VISUALIZE
 //#define FLIP_Y_AXIS
 
 // Motion model parameters

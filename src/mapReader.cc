@@ -209,6 +209,67 @@ int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool vis
     }
     return 0;
 }
+int MapReader::visualize_motion_map(vector<state_t> x_bar)
+{
+        Mat image = Mat::zeros(map.size_y, map.size_x, CV_32FC1);
+
+        for (unsigned int i = 0; i < image.rows; i++)
+        {
+            for (unsigned int j = 0; j < image.cols; j++)
+            {
+    #ifdef FLIP_Y_AXIS
+                // Mat is accessed as (row,col), which means (y,x)
+                // Assuming that map.dat was stored as (x,y)
+                // ^
+                // |
+                // Y
+                // |
+                // 0/0 --X-->
+                // So we should access as map.prob[j][i]
+                // But image axis is:
+                // 0/0 --X-->
+                // |
+                // Y
+                // |
+                // v
+                // So we should access as map.prob[j][image.rows-i-1]
+                if (map.prob[j][image.rows-i-1] > 0.0)
+                    image.at<float>(i, j) = map.prob[j][image.rows-i-1];
+    #else
+                if (map.prob[i][j] > 0.0)
+                    image.at<float>(j, i) = map.prob[i][j];
+    #endif
+            }
+        }
+
+        cvtColor(image, image, COLOR_GRAY2BGR);
+
+        if (!x_bar.empty())
+        {
+            for (int i=0; i < x_bar.size(); ++i)
+            {
+                state_t x_t1 = x_bar[i];
+                Point particle = Point_<int>((int)(x_t1.x/res), (int)(x_t1.y/res));
+                circle(image, particle, 1, Scalar(0, 0, 255), 2, 8);
+                if (i==0){
+                    double x_end = (x_t1.x + 10 * cos(x_t1.theta));
+                    double y_end = (x_t1.y + 10 * sin(x_t1.theta));
+                    Point ray_end = Point_<int>((int)(x_end/res), (int)(y_end/res));
+                    line(image, particle, ray_end, Scalar(255, 0, 0)); 
+                }
+                if (i== (x_bar.size()-1)){
+                    double x_end = (x_t1.x + 10 * cos(x_t1.theta));
+                    double y_end = (x_t1.y + 10 * sin(x_t1.theta));
+                    Point ray_end = Point_<int>((int)(x_end/res), (int)(y_end/res));
+                    line(image, particle, ray_end, Scalar(255, 0, 0));                     
+                }
+                
+            }
+        }
+
+}
+
+
 
 
 int MapReader::save_video(string videoPath)
