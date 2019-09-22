@@ -122,10 +122,10 @@ int main(int argc, const char * argv[])
     if (vis_flag)
     {
         // Visualize initial particles.
-//        map_obj.visualize_map(x_bar);
+        // map_obj.visualize_map(x_bar);
 
         // Visualize ray casting.
-//        map_obj.visualize_map(x_bar, false, true, &sensor_model);
+        // map_obj.visualize_map(x_bar, false, true, &sensor_model);
     }
 #endif
 
@@ -138,10 +138,12 @@ int main(int argc, const char * argv[])
         state_t x_t0;
         state_t x_t1;
         string line;
-        int time_idx = 0;
+        int log_idx = 0;
+        bool firstPass = true;
         while (getline(log_file, line))
         {
-            time_idx++;
+            log_idx++;
+
             vector<double> odometry_robot;  // Odometry reading: [x, y, theta]
             vector<double> odometry_laser;  // Laser coordinates in O frame
             vector<double> meas_vals;       // numerical values
@@ -164,7 +166,7 @@ int main(int argc, const char * argv[])
 
 #ifdef SKIP_ODO_READINGS
             // Ignoring odometry reading
-            if ((time_stamp <= 0.0) || (meas_type == 'O'))
+            if (meas_type == 'O')
                 continue;
 #endif
 
@@ -176,13 +178,15 @@ int main(int argc, const char * argv[])
                     ranges.push_back(meas_vals[i]);
             }
 
-            cout << "Processing time step " << time_idx;
-            cout << " at time " << time_stamp;
+            cout << "Processing log step " << log_idx;
+            cout << " at timestamp " << time_stamp;
             cout << endl;
 
-            if (time_idx == 1)
+            // Forcing first reading to be laser.
+            if (firstPass)
             {
                 u_t0 = odometry_robot;
+                firstPass = false;
                 continue;
             }
 
@@ -196,9 +200,6 @@ int main(int argc, const char * argv[])
                 x_t0 = x_bar[m];
                 x_t1 = motion_model.update(u_t0, u_t1, x_t0);
 
-                // Debug
-//                x_t1.weight = (float)(1.0 / (float)num_particles);
-                
                 // Sensor model
                 if (meas_type == 'L')
                 {
@@ -230,13 +231,15 @@ int main(int argc, const char * argv[])
 
             // Resampling
             x_bar = resampler.low_variance_sampler(x_bar);
-//            x_bar = resampler.multinomial_sampler(x_bar);
+            // x_bar = resampler.multinomial_sampler(x_bar);
 
 #ifdef MAP_VISUALIZE
             if (vis_flag)
             {
+                // To visualize particles only
                 map_obj.visualize_map(x_bar, true);
-//                map_obj.visualize_map(x_bar, true, false, NULL, true, ranges);
+                // To visualize the particles with measurements
+                // map_obj.visualize_map(x_bar, true, false, NULL, true, ranges);
             }
 #endif
         }

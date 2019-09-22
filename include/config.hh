@@ -4,7 +4,7 @@
 // General parameters
 #define NUM_PARTICLES 5000
 #define MAP_FILE_PATH "../data/map/wean.dat"
-#define LOG_FILE_PATH "../data/log/robotdata1.log"
+#define LOG_FILE_PATH "../data/log/robotdata2.log"
 #define SKIP_ODO_READINGS
 #define MAP_VISUALIZE
 //#define FLIP_Y_AXIS
