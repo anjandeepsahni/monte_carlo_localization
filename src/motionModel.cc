@@ -39,19 +39,10 @@ state_t MotionModel::update(vector<double> u_t0, vector<double> u_t1, state_t x_
     normal_distribution<double> d2{0, sqrt(var2)};
     normal_distribution<double> d3{0, sqrt(var3)};
 
-//    var1 = alpha1 * del_rot1 + alpha2 * del_trans;
-//    var2 = alpha3 * del_trans + alpha4 * del_rot1 + del_rot2;
-//    var3 = alpha1 * del_rot2 + alpha2 * del_trans;
-//
-//    normal_distribution<double> d1{0, sqrt(abs(var1))};
-//    normal_distribution<double> d2{0, sqrt(abs(var2))};
-//    normal_distribution<double> d3{0, sqrt(abs(var3))};
-
     // Gaussian noise distribution with zero mean and sd for each paramter,
     // thereby modelling the noise of each parameter
-    default_random_engine gen;
-//    random_device rd{};
-//    mt19937 gen{rd()};
+    random_device rd{};
+    mt19937 gen{rd()};
     del_rot1_hat = del_rot1 - d1(gen);
     del_trans_hat = del_trans - d2(gen);
     del_rot2_hat = del_rot2 - d3(gen);

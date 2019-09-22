@@ -15,7 +15,6 @@ using namespace std;
 vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=false)
 {
     vector<state_t> x_bar_init(num_particles);
-    default_random_engine generator;
 
     double res = map.resolution;
     double start_x = map.min_x * res;
@@ -28,19 +27,23 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
     double start_y = map.max_y * res;
     double end_y = map.min_y * res;
 #endif
+
     uniform_real_distribution<double> dist_x(start_x, end_x);
     uniform_real_distribution<double> dist_y(start_y, end_y);
     uniform_real_distribution<double> dist_theta(-3.14, 3.14);
     double w = (double)(1.0 / (double)num_particles);
+    random_device rd{};
+    mt19937 gen{rd()};
+    
     for (int m = 0; m < num_particles; m++)
     {
         double x, y, theta;
         // If freeSpace = true, keep looping until we find a particle in free space.
         do
         {
-            x = dist_x(generator);
-            y = dist_y(generator);
-            theta = dist_theta(generator);
+            x = dist_x(gen);
+            y = dist_y(gen);
+            theta = dist_theta(gen);
 #ifdef FLIP_Y_AXIS
         } while (freeSpace and (map.prob[(int)(x/res)][map.size_y - (int)(y/res)] == -1 ||
                  map.prob[(int)(x/res)][map.size_y - (int)(y/res)] <= FREE_SPACE_THRESH));
