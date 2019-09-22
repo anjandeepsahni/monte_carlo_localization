@@ -13,6 +13,7 @@ robot_localization.xcodeproj/*
 
 # Ignore vscode project
 .vscode/*
+.vs/*
 
 # Ignore python source code
 code/*
