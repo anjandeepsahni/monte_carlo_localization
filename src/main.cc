@@ -214,6 +214,9 @@ int main(int argc, const char * argv[])
             }
 
             // Normalize weights.
+            if ((int)w_t_sum == 0)
+                throw runtime_error("Sum of particle weights is zero!");
+            
             for (int m = 0; m < num_particles; m++)
             {
                 x_bar_new[m].weight /= w_t_sum;
