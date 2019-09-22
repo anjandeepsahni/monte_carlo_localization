@@ -19,13 +19,15 @@ vector<state_t> Resampler::multinomial_sampler(vector<state_t> x_bar)
     }
 
     // Create the distribution with those weights.
-    discrete_distribution<> d(weights.begin(), weights.end());
+    discrete_distribution<> dist(weights.begin(), weights.end());
 
     // Use the distribution to resample particles.
     vector<state_t> x_bar_resampled(M);
-    default_random_engine generator;
+    random_device rd{};
+    mt19937 gen{rd()};
+
     for(int i=0; i<M; ++i) {
-        x_bar_resampled[i] = x_bar[d(generator)];
+        x_bar_resampled[i] = x_bar[dist(gen)];
     }
 
     return x_bar_resampled;
@@ -38,14 +40,18 @@ vector<state_t> Resampler::low_variance_sampler(vector<state_t> x_bar)
     long M = x_bar.size();
 
     // sampler parameters
-    float r = (float) (rand()) / ((float) (RAND_MAX * M));
-    float c = x_bar[0].weight;
+    uniform_real_distribution<> dist(0.0, (double)(1.0/(double)M));
+    random_device rd{};
+    mt19937 gen{rd()};
+
+    double r = dist(gen);
+    double c = x_bar[0].weight;
     int i = 0;
     vector<state_t> x_bar_resampled(M);
 
     for (int m=1; m<=M; ++m)
     {
-        float u = r + ((float) (m-1) / (float) M);
+        double u = r + ((double) (m-1) / (double) M);
         while (u > c)
         {
             ++i;

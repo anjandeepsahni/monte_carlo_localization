@@ -34,7 +34,7 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
     double w = (double)(1.0 / (double)num_particles);
     random_device rd{};
     mt19937 gen{rd()};
-    
+
     for (int m = 0; m < num_particles; m++)
     {
         double x, y, theta;
