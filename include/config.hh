@@ -8,7 +8,6 @@
 #define SKIP_ODO_READINGS
 #define MAP_VISUALIZE
 //#define MOTION_MODEL_CALIBRATION_VIZ
-//#define FLIP_Y_AXIS
 
 // Motion model parameters
 #define ALPHA_1 0.0005
@@ -27,7 +26,7 @@
 #define P_HIT_STD           20      // cm
 #define LAMBDA_SHORT        0.01
 #define LASER_OFFSET        25.0    // cm
-#define PARTICLE_THRESHOLD  0.999   //0.7
+#define PARTICLE_THRESHOLD  0.999
 #define FREE_SPACE_THRESH   0.999
 #define MAX_SENSOR_THETA    180     // degrees
 

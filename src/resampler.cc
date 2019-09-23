@@ -23,8 +23,7 @@ vector<state_t> Resampler::multinomial_sampler(vector<state_t> x_bar)
 
     // Use the distribution to resample particles.
     vector<state_t> x_bar_resampled(M);
-    random_device rd{};
-    mt19937 gen{rd()};
+    mt19937 gen(rand());
 
     for(int i=0; i<M; ++i) {
         x_bar_resampled[i] = x_bar[dist(gen)];
@@ -41,8 +40,7 @@ vector<state_t> Resampler::low_variance_sampler(vector<state_t> x_bar)
 
     // sampler parameters
     uniform_real_distribution<> dist(0.0, (double)(1.0/(double)M));
-    random_device rd{};
-    mt19937 gen{rd()};
+    mt19937 gen(rand());
 
     double r = dist(gen);
     double c = x_bar[0].weight;
@@ -62,4 +60,3 @@ vector<state_t> Resampler::low_variance_sampler(vector<state_t> x_bar)
 
     return x_bar_resampled;
 }
-

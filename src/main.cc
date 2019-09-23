@@ -26,8 +26,7 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
     uniform_real_distribution<double> dist_y(start_y, end_y);
     uniform_real_distribution<double> dist_theta(-3.14, 3.14);
     double w = (double)(1.0 / (double)num_particles);
-    random_device rd{};
-    mt19937 gen{rd()};
+    mt19937 gen(rand());
 
     for (int m = 0; m < num_particles; m++)
     {
@@ -186,6 +185,7 @@ int main(int argc, const char * argv[])
             vector<state_t> x_bar_new(num_particles);
             u_t1 = odometry_robot;
 
+            // Skip reading if no motion in robot.
             if ((u_t1[0] - u_t0[0] == 0) &&
                 (u_t1[1] - u_t0[1] == 0) &&
                 (u_t1[2] - u_t0[2] == 0))
@@ -200,7 +200,7 @@ int main(int argc, const char * argv[])
 //            map_obj.visualize_motion_model_calibration(x_bar[0], u_t0, u_t1, 1000, &motion_model);
 //            exit(0);
 #endif
- 
+
             double w_t_sum = 0;
             // For all particles
             for (int m = 0; m < num_particles; m++)
@@ -229,7 +229,7 @@ int main(int argc, const char * argv[])
             // Normalize weights.
             if ((int)w_t_sum == 0)
                 throw runtime_error("Sum of particle weights is zero!");
-            
+
             for (int m = 0; m < num_particles; m++)
             {
                 x_bar_new[m].weight /= w_t_sum;

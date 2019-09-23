@@ -41,12 +41,11 @@ state_t MotionModel::update(vector<double> u_t0, vector<double> u_t1, state_t x_
 
     // Gaussian noise distribution with zero mean and sd for each paramter,
     // thereby modelling the noise of each parameter
-    random_device rd{};
-    mt19937 gen{rd()};
+    mt19937 gen(rand());
     del_rot1_hat = del_rot1 - d1(gen);
     del_trans_hat = del_trans - d2(gen);
     del_rot2_hat = del_rot2 - d3(gen);
-    
+
     // Converting parameters from the robot's coordinate frame to the world
     // coordinate frame, again by simpletrignometric calculations.
     state_t x_t1;
