@@ -59,19 +59,6 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
     return x_bar_init;
 }
 
-void motion_model_visualize(state_t x_t0 ,vector<double> u_t0, vector<double> u_t1, int samples )
-{   
-    vector<state_t> xts;
-    state_t x_t1;
-    
-    for (int i = 0; i < samples; i++)
-    {
-        x_t1 = motion_model.update(u_t0, u_t1, x_t0);    
-        xts[i]= x_t1;
-    }
-    map_obj.visualize_motion_map(xts);
-}
-
 
 int main(int argc, const char * argv[])
 {
@@ -96,7 +83,6 @@ int main(int argc, const char * argv[])
 
     string src_path_map = MAP_FILE_PATH;
     string src_path_log = LOG_FILE_PATH;
-    int samples= 500;
     // Get occupancy map
     MapReader map_obj = MapReader(src_path_map);
     if (map_obj.read_map() < 0)
@@ -116,7 +102,7 @@ int main(int argc, const char * argv[])
         P_HIT_STD,
         LAMBDA_SHORT,
         LASER_OFFSET,
-        FREE_SPACE_THRESH,
+        PARTICLE_THRESHOLD,
         occupancy_map // occupancy_map
     };
     SensorModel sensor_model = SensorModel(sm_init);
@@ -206,12 +192,11 @@ int main(int argc, const char * argv[])
             vector<state_t> x_bar_new(num_particles);
             u_t1 = odometry_robot;
 
-#ifdef MOTION_MODEL_VISUALIZE
-            x_t0 = x_bar[0];
-            motion_model_visualize(x_t0 , u_t0, u_t1, samples)
+#ifdef MOTION_MODEL_CALIBRATION_VIZ
+//            map_obj.visualize_motion_model_calibration(x_bar[0], u_t0, u_t1, 1000, &motion_model);
+//            exit(0);
 #endif
  
-
             double w_t_sum = 0;
             // For all particles
             for (int m = 0; m < num_particles; m++)

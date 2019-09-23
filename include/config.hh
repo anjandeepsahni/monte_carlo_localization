@@ -4,10 +4,10 @@
 // General parameters
 #define NUM_PARTICLES 5000
 #define MAP_FILE_PATH "../data/map/wean.dat"
-#define LOG_FILE_PATH "../data/log/robotdata2.log"
+#define LOG_FILE_PATH "../data/log/robotdata1.log"
 #define SKIP_ODO_READINGS
 #define MAP_VISUALIZE
-#define MOTION_MODEL_VISUALIZE
+//#define MOTION_MODEL_CALIBRATION_VIZ
 //#define FLIP_Y_AXIS
 
 // Motion model parameters
@@ -27,6 +27,7 @@
 #define P_HIT_STD           20      // cm
 #define LAMBDA_SHORT        0.01
 #define LASER_OFFSET        25.0    // cm
+#define PARTICLE_THRESHOLD  0.999   //0.7
 #define FREE_SPACE_THRESH   0.999
 #define MAX_SENSOR_THETA    180     // degrees
 
