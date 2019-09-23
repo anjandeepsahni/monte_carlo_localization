@@ -95,8 +95,8 @@ int main(int argc, const char * argv[])
         P_HIT_STD,
         LAMBDA_SHORT,
         LASER_OFFSET,
-        PARTICLE_THRESHOLD,
-        occupancy_map // occupancy_map
+        PARTICLE_THRESH,
+        occupancy_map
     };
     SensorModel sensor_model = SensorModel(sm_init);
     Resampler resampler = Resampler();

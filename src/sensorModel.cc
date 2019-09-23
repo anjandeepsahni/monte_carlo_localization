@@ -125,11 +125,13 @@ double SensorModel::ray_casting(state_t x_t1, double angle)
     double map_res = sm_params.occupancy_map.resolution;
     double x = x_t1.x + sm_params.laser_offset * cos(x_t1.theta);   // laser x
     double y = x_t1.y + sm_params.laser_offset * sin(x_t1.theta);   // laser y
+
     // Step size along the ray
     int step = sm_params.z_dist_step;
+
     // Move along ray and find first obstacle
-    int obs_dist = sm_params.z_max_range;
     // Start ray tracing from dist=0, in case particle is at occupied location
+    int obs_dist = sm_params.z_max_range;
     for (int dist=0; dist <= sm_params.z_max_range; dist=dist+step)
     {
         int x_end = (int)((x + dist * cos(angle - M_PI_2)) / map_res);
