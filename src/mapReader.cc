@@ -136,28 +136,8 @@ int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool vis
         {
             for (unsigned int j = 0; j < mapBaseImage.cols; j++)
             {
-#ifdef FLIP_Y_AXIS
-                // Mat is accessed as (row,col), which means (y,x)
-                // Assuming that map.dat was stored as (x,y)
-                // ^
-                // |
-                // Y
-                // |
-                // 0/0 --X-->
-                // So we should access as map.prob[j][i]
-                // But image axis is:
-                // 0/0 --X-->
-                // |
-                // Y
-                // |
-                // v
-                // So we should access as map.prob[j][image.rows-i-1]
-                if (map.prob[j][mapBaseImage.rows-i-1] > 0.0)
-                    mapBaseImage.at<float>(i, j) = map.prob[j][mapBaseImage.rows-i-1];
-#else
                 if (map.prob[i][j] > 0.0)
-                    mapBaseImage.at<float>(j, i) = map.prob[i][j];
-#endif
+                    mapBaseImage.at<float>(i, j) = map.prob[i][j];
             }
         }
     }
@@ -170,26 +150,26 @@ int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool vis
         for (int i=0; i < x_bar.size(); ++i)
         {
             state_t x_t1 = x_bar[i];
-            Point particle = Point_<int>((int)(x_t1.x/res), (int)(x_t1.y/res));
+            Point particle = Point_<int>((int)(x_t1.y/res), (int)(x_t1.x/res));
             circle(image, particle, 1, Scalar(0, 0, 255), 2, 8);
 
             if (visRays || visMeas)
             {
                 double x = x_t1.x + LASER_OFFSET * cos(x_t1.theta);
                 double y = x_t1.y + LASER_OFFSET * sin(x_t1.theta);
-                Point ray_start = Point_<int>((int)(x/res), (int)(y/res));
+                Point ray_start = Point_<int>((int)(y/res), (int)(x/res));
                 for (int j = 0; j < MAX_SENSOR_THETA; j+=5)
                 {
                     // Angle wrt x axis
-                    double angle = ((double)j * (M_PI / 180)) + x_t1.theta - M_PI_2;
+                    double angle = ((double)j * (M_PI / 180)) + x_t1.theta;
                     double dist;
                     if (visRays)
                         dist = sensor_model->ray_casting(x_t1, angle);
                     else
                         dist = z_t[j];
-                    double x_end = (x + dist * cos(angle));
-                    double y_end = (y + dist * sin(angle));
-                    Point ray_end = Point_<int>((int)(x_end/res), (int)(y_end/res));
+                    double x_end = (x + dist * cos(angle - M_PI_2));
+                    double y_end = (y + dist * sin(angle - M_PI_2));
+                    Point ray_end = Point_<int>((int)(y_end/res), (int)(x_end/res));
                     line(image, ray_start, ray_end, Scalar(255, 0, 0));
                 }
             }
@@ -253,9 +233,9 @@ int MapReader::visualize_motion_model_calibration(state_t x_t0 ,vector<double> u
     cvtColor(image, image, COLOR_GRAY2BGR);
 
     // Plot x_t0 and angle direction.
-    Point particle = Point_<int>((int)(x_t0.x/res), (int)(x_t0.y/res));
+    Point particle = Point_<int>((int)(x_t0.y/res), (int)(x_t0.x/res));
     circle(image, particle, 1, Scalar(0, 0, 255), 2, 8);
-    Point avg_pred_particle = Point_<int>((int)(x_t1_meanx/res), (int)(x_t1_meany/res));
+    Point avg_pred_particle = Point_<int>((int)(x_t1_meany/res), (int)(x_t1_meanx/res));
     line(image, particle, avg_pred_particle, Scalar(255, 0, 0));
 
     if (!x_t1_samples.empty())
@@ -263,7 +243,7 @@ int MapReader::visualize_motion_model_calibration(state_t x_t0 ,vector<double> u
         for (int i=0; i < x_t1_samples.size(); ++i)
         {
             state_t x_t1 = x_t1_samples[i];
-            Point particle = Point_<int>((int)(x_t1.x/res), (int)(x_t1.y/res));
+            Point particle = Point_<int>((int)(x_t1.y/res), (int)(x_t1.x/res));
             circle(image, particle, 1, Scalar(0, 0, 255), 2, 8);
         }
     }

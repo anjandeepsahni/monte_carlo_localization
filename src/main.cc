@@ -19,14 +19,8 @@ vector<state_t> init_particles(int num_particles, map_type map, bool freeSpace=f
     double res = map.resolution;
     double start_x = map.min_x * res;
     double end_x = map.max_x * res;
-#ifdef FLIP_Y_AXIS
-    // Account for flipped y axis.
-    double start_y = (map.size_y - map.max_y) * res;
-    double end_y = (map.size_y - map.min_y) * res;
-#else
     double start_y = map.max_y * res;
     double end_y = map.min_y * res;
-#endif
 
     uniform_real_distribution<double> dist_x(start_x, end_x);
     uniform_real_distribution<double> dist_y(start_y, end_y);
@@ -121,10 +115,10 @@ int main(int argc, const char * argv[])
     if (vis_flag)
     {
         // Visualize initial particles.
-        // map_obj.visualize_map(x_bar);
+//        map_obj.visualize_map(x_bar);
 
         // Visualize ray casting.
-        // map_obj.visualize_map(x_bar, false, true, &sensor_model);
+//        map_obj.visualize_map(x_bar, false, true, &sensor_model);
     }
 #endif
 
@@ -179,18 +173,28 @@ int main(int argc, const char * argv[])
 
             cout << "Processing log step " << log_idx;
             cout << " at timestamp " << time_stamp;
-            cout << endl;
 
             // Forcing first reading to be laser.
             if (firstPass)
             {
                 u_t0 = odometry_robot;
                 firstPass = false;
+                cout << endl;
                 continue;
             }
 
             vector<state_t> x_bar_new(num_particles);
             u_t1 = odometry_robot;
+
+            if ((u_t1[0] - u_t0[0] == 0) &&
+                (u_t1[1] - u_t0[1] == 0) &&
+                (u_t1[2] - u_t0[2] == 0))
+            {
+                cout << ", skipping." << endl;
+                continue;
+            }
+            else
+                cout << endl;
 
 #ifdef MOTION_MODEL_CALIBRATION_VIZ
 //            map_obj.visualize_motion_model_calibration(x_bar[0], u_t0, u_t1, 1000, &motion_model);
