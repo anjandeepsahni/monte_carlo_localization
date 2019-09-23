@@ -33,9 +33,6 @@ class MapReader
 public:
     map_type map;
     string mapName;
-#ifdef MAP_VISUALIZE
-    vector<Mat> videoFrames;
-#endif
 
     MapReader(string mapName);
     int read_map();
@@ -48,6 +45,11 @@ public:
                                            vector<double> u_t1, int num_samples, MotionModel* motion_model);
 #endif
 
+private:
+#ifdef MAP_VISUALIZE
+    Mat mapBaseImage;
+    vector<Mat> videoFrames;
+#endif
 
 };
 

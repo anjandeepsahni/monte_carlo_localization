@@ -127,44 +127,43 @@ int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool vis
 
     int res = map.resolution;
 
-    // Mat is accessed as (row,col), which means (y,x)
-    // 0/0 --col-->
-    // |
-    // row
-    // |
-    // v
-    Mat image = Mat::zeros(map.size_y, map.size_x, CV_32FC1);
-
-    for (unsigned int i = 0; i < image.rows; i++)
+    // Check if base map matrix is initialized.
+    if (mapBaseImage.dims == 0)
     {
-        for (unsigned int j = 0; j < image.cols; j++)
+        mapBaseImage = Mat::zeros(map.size_y, map.size_x, CV_32FC1);
+
+        for (unsigned int i = 0; i < mapBaseImage.rows; i++)
         {
+            for (unsigned int j = 0; j < mapBaseImage.cols; j++)
+            {
 #ifdef FLIP_Y_AXIS
-            // Mat is accessed as (row,col), which means (y,x)
-            // Assuming that map.dat was stored as (x,y)
-            // ^
-            // |
-            // Y
-            // |
-            // 0/0 --X-->
-            // So we should access as map.prob[j][i]
-            // But image axis is:
-            // 0/0 --X-->
-            // |
-            // Y
-            // |
-            // v
-            // So we should access as map.prob[j][image.rows-i-1]
-            if (map.prob[j][image.rows-i-1] > 0.0)
-                image.at<float>(i, j) = map.prob[j][image.rows-i-1];
+                // Mat is accessed as (row,col), which means (y,x)
+                // Assuming that map.dat was stored as (x,y)
+                // ^
+                // |
+                // Y
+                // |
+                // 0/0 --X-->
+                // So we should access as map.prob[j][i]
+                // But image axis is:
+                // 0/0 --X-->
+                // |
+                // Y
+                // |
+                // v
+                // So we should access as map.prob[j][image.rows-i-1]
+                if (map.prob[j][mapBaseImage.rows-i-1] > 0.0)
+                    mapBaseImage.at<float>(i, j) = map.prob[j][mapBaseImage.rows-i-1];
 #else
-            if (map.prob[i][j] > 0.0)
-                image.at<float>(j, i) = map.prob[i][j];
+                if (map.prob[i][j] > 0.0)
+                    mapBaseImage.at<float>(j, i) = map.prob[i][j];
 #endif
+            }
         }
     }
 
-    cvtColor(image, image, COLOR_GRAY2BGR);
+    Mat image;
+    cvtColor(mapBaseImage, image, COLOR_GRAY2BGR);
 
     if (!x_bar.empty())
     {
@@ -210,6 +209,24 @@ int MapReader::visualize_map(vector<state_t> x_bar, bool storeForVideo, bool vis
     }
     return 0;
 }
+
+int MapReader::save_video(string videoPath)
+{
+    if (videoFrames.empty())
+        return -1;
+
+    int width = (videoFrames[0].size()).width;
+    int height = (videoFrames[0].size()).height;
+    VideoWriter video = VideoWriter(videoPath, 0, 1, Size2i(width, height));
+
+    for (int i = 0; i < videoFrames.size(); ++i)
+        video.write(videoFrames[i]);
+
+    video.release();
+    return 0;
+}
+
+#endif /* MAP_VISUALIZE */
 
 #ifdef MOTION_MODEL_CALIBRATION_VIZ
 int MapReader::visualize_motion_model_calibration(state_t x_t0 ,vector<double> u_t0,
@@ -259,22 +276,4 @@ int MapReader::visualize_motion_model_calibration(state_t x_t0 ,vector<double> u
 }
 
 #endif /* MOTION_MODEL_CALIBRATION_VIZ */
-
-int MapReader::save_video(string videoPath)
-{
-    if (videoFrames.empty())
-        return -1;
-
-    int width = (videoFrames[0].size()).width;
-    int height = (videoFrames[0].size()).height;
-    VideoWriter video = VideoWriter(videoPath, 0, 1, Size2i(width, height));
-
-    for (int i = 0; i < videoFrames.size(); ++i)
-        video.write(videoFrames[i]);
-
-    video.release();
-    return 0;
-}
-
-#endif /* MAP_VISUALIZE */
 
